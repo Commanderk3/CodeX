@@ -1,0 +1,54 @@
+.leetcode-clone {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.header {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.main-splitter {
+  flex: 1;
+  width: 100%;
+}
+
+.problem-panel-container,
+.editor-testcase-container,
+.code-editor-container,
+.testcase-container {
+  overflow: auto;
+}
+
+.difficulty {
+  margin-left: 10px;
+  font-size: 0.8em;
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+
+.difficulty.easy {
+  background-color: #e6f7e6;
+  color: #28a745;
+}
+
+.difficulty.medium {
+  background-color: #fff3e6;
+  color: #ff8c00;
+}
+
+.difficulty.hard {
+  background-color: #ffe6e6;
+  color: #dc3545;
+}
