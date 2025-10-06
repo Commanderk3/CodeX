@@ -26,10 +26,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def isPalindrome(self, x: int) -> bool:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    bool isPalindrome(int x) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public boolean isPalindrome(int x) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {number} x\n * @return {boolean}\n */\nvar isPalindrome = function(x) {\n    // Your code here\n};"
+      "python": "def isPalindrome(x: int) -> bool:\n    # Your code here",
+      "c++": "bool isPalindrome(int x) {\n    // Your code here\n}",
+      "java": "public boolean isPalindrome(int x) {\n    // Your code here\n}",
+      "javascript": "function isPalindrome(x) {\n    // Your code here\n}"
     }
   },
   {
@@ -41,28 +41,28 @@
     "test_cases": [
       {
         "input": {
-          "x": "abcabcbb"
+          "s": "abcabcbb"
         },
         "output": 3
       },
       {
         "input": {
-          "x": "bbbbb"
+          "s": "bbbbb"
         },
         "output": 1
       },
       {
         "input": {
-          "x": "pwwkew"
+          "s": "pwwkew"
         },
         "output": 3
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def lengthOfLongestSubstring(self, s: str) -> int:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    int lengthOfLongestSubstring(string s) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public int lengthOfLongestSubstring(String s) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {string} s\n * @return {number}\n */\nvar lengthOfLongestSubstring = function(s) {\n    // Your code here\n};"
+      "python": "def lengthOfLongestSubstring(s: str) -> int:\n    # Your code here",
+      "c++": "int lengthOfLongestSubstring(string s) {\n    // Your code here\n}",
+      "java": "public int lengthOfLongestSubstring(String s) {\n    // Your code here\n}",
+      "javascript": "function lengthOfLongestSubstring(s) {\n    // Your code here\n}"
     }
   },
   {
@@ -92,10 +92,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def reverse(self, x: int) -> int:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    int reverse(int x) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public int reverse(int x) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {number} x\n * @return {number}\n */\nvar reverse = function(x) {\n    // Your code here\n};"
+      "python": "def reverse(x: int) -> int:\n    # Your code here",
+      "c++": "int reverse(int x) {\n    // Your code here\n}",
+      "java": "public int reverse(int x) {\n    // Your code here\n}",
+      "javascript": "function reverse(x) {\n    // Your code here\n}"
     }
   },
   {
@@ -125,10 +125,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def isValid(self, s: str) -> bool:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    bool isValid(string s) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public boolean isValid(String s) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {string} s\n * @return {boolean}\n */\nvar isValid = function(s) {\n    // Your code here\n};"
+      "python": "def isValid(s: str) -> bool:\n    # Your code here",
+      "c++": "bool isValid(string s) {\n    // Your code here\n}",
+      "java": "public boolean isValid(String s) {\n    // Your code here\n}",
+      "javascript": "function isValid(s) {\n    // Your code here\n}"
     }
   },
   {
@@ -161,10 +161,10 @@
       }
     ],
     "boilerplate": {
-      "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def mergeTwoLists(self, l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n        # Your code here",
-      "c++": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {\n        // Your code here\n    }\n};",
-      "java": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode mergeTwoLists(ListNode l1, ListNode l2) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} l1\n * @param {ListNode} l2\n * @return {ListNode}\n */\nvar mergeTwoLists = function(l1, l2) {\n    // Your code here\n};"
+      "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\n\ndef mergeTwoLists(l1: Optional[ListNode], l2: Optional[ListNode]) -> Optional[ListNode]:\n    # Your code here",
+      "c++": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {\n    // Your code here\n}",
+      "java": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\npublic ListNode mergeTwoLists(ListNode l1, ListNode l2) {\n    // Your code here\n}",
+      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\nfunction mergeTwoLists(l1, l2) {\n    // Your code here\n}"
     }
   },
   {
@@ -197,10 +197,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def search(self, nums: List[int], target: int) -> int:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    int search(vector<int>& nums, int target) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public int search(int[] nums, int target) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {number[]} nums\n * @param {number} target\n * @return {number}\n */\nvar search = function(nums, target) {\n    // Your code here\n};"
+      "python": "def search(nums: List[int], target: int) -> int:\n    # Your code here",
+      "c++": "int search(vector<int>& nums, int target) {\n    // Your code here\n}",
+      "java": "public int search(int[] nums, int target) {\n    // Your code here\n}",
+      "javascript": "function search(nums, target) {\n    // Your code here\n}"
     }
   },
   {
@@ -230,10 +230,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def maxArea(self, height: List[int]) -> int:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    int maxArea(vector<int>& height) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public int maxArea(int[] height) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {number[]} height\n * @return {number}\n */\nvar maxArea = function(height) {\n    // Your code here\n};"
+      "python": "def maxArea(height: List[int]) -> int:\n    # Your code here",
+      "c++": "int maxArea(vector<int>& height) {\n    // Your code here\n}",
+      "java": "public int maxArea(int[] height) {\n    // Your code here\n}",
+      "javascript": "function maxArea(height) {\n    // Your code here\n}"
     }
   },
   {
@@ -247,7 +247,10 @@
         "input": {
           "nums": [-1, 0, 1, 2, -1, -4]
         },
-        "output": [[-1, -1, 2], [-1, 0, 1]]
+        "output": [
+          [-1, -1, 2],
+          [-1, 0, 1]
+        ]
       },
       {
         "input": {
@@ -263,10 +266,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def threeSum(self, nums: List[int]) -> List[List[int]]:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    vector<vector<int>> threeSum(vector<int>& nums) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public List<List<Integer>> threeSum(int[] nums) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {number[]} nums\n * @return {number[][]}\n */\nvar threeSum = function(nums) {\n    // Your code here\n};"
+      "python": "def threeSum(nums: List[int]) -> List[List[int]]:\n    # Your code here",
+      "c++": "vector<vector<int>> threeSum(vector<int>& nums) {\n    // Your code here\n}",
+      "java": "public List<List<Integer>> threeSum(int[] nums) {\n    // Your code here\n}",
+      "javascript": "function threeSum(nums) {\n    // Your code here\n}"
     }
   },
   {
@@ -299,10 +302,10 @@
       }
     ],
     "boilerplate": {
-      "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def removeNthFromEnd(self, head: Optional[ListNode], n: int) -> Optional[ListNode]:\n        # Your code here",
-      "c++": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* removeNthFromEnd(ListNode* head, int n) {\n        // Your code here\n    }\n};",
-      "java": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\nclass Solution {\n    public ListNode removeNthFromEnd(ListNode head, int n) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\n/**\n * @param {ListNode} head\n * @param {number} n\n * @return {ListNode}\n */\nvar removeNthFromEnd = function(head, n) {\n    // Your code here\n};"
+      "python": "# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\n\ndef removeNthFromEnd(head: Optional[ListNode], n: int) -> Optional[ListNode]:\n    # Your code here",
+      "c++": "/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nListNode* removeNthFromEnd(ListNode* head, int n) {\n    // Your code here\n}",
+      "java": "/**\n * Definition for singly-linked list.\n * public class ListNode {\n *     int val;\n *     ListNode next;\n *     ListNode() {}\n *     ListNode(int val) { this.val = val; }\n *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n * }\n */\npublic ListNode removeNthFromEnd(ListNode head, int n) {\n    // Your code here\n}",
+      "javascript": "/**\n * Definition for singly-linked list.\n * function ListNode(val, next) {\n *     this.val = (val===undefined ? 0 : val)\n *     this.next = (next===undefined ? null : next)\n * }\n */\nfunction removeNthFromEnd(head, n) {\n    // Your code here\n}"
     }
   },
   {
@@ -332,10 +335,10 @@
       }
     ],
     "boilerplate": {
-      "python": "class Solution:\n    def letterCombinations(self, digits: str) -> List[str]:\n        # Your code here",
-      "c++": "class Solution {\npublic:\n    vector<string> letterCombinations(string digits) {\n        // Your code here\n    }\n};",
-      "java": "class Solution {\n    public List<String> letterCombinations(String digits) {\n        // Your code here\n    }\n}",
-      "javascript": "/**\n * @param {string} digits\n * @return {string[]}\n */\nvar letterCombinations = function(digits) {\n    // Your code here\n};"
+      "python": "def letterCombinations(digits: str) -> List[str]:\n    # Your code here",
+      "c++": "vector<string> letterCombinations(string digits) {\n    // Your code here\n}",
+      "java": "public List<String> letterCombinations(String digits) {\n    // Your code here\n}",
+      "javascript": "function letterCombinations(digits) {\n    // Your code here\n}"
     }
   }
 ]

@@ -1,0 +1,114 @@
+/* Layout */
+.left-panel,
+.right-panel {
+  flex: 1;
+  padding: 20px;
+  background: #1a1a1a;
+  border-radius: 12px;
+}
+
+.left-panel {
+  margin-right: 12px;
+}
+
+.right-panel {
+  margin-left: 12px;
+}
+
+.section-title {
+  font-size: 1rem;
+  margin-bottom: 10px;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #00bcd4;
+}
+
+/* Avatar Preview */
+.avatar-preview {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.avatar-display {
+  font-size: 3rem;
+  border: 2px solid #00bcd4;
+  border-radius: 50%;
+  padding: 20px;
+  background: #0f0f0f;
+}
+
+/* Inputs */
+.input-group {
+  margin-bottom: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+  color: #aaa;
+}
+
+.input-group input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #121212;
+  color: #e5e5e5;
+}
+
+/* Avatar grid */
+.avatar-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.avatar {
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 10px;
+  border-radius: 8px;
+  background: #222;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.avatar.selected {
+  background: #00bcd4;
+  color: #0f0f0f;
+  font-weight: bold;
+}
+
+/* Language grid */
+.language-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.language-option {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: 1px solid #444;
+  cursor: pointer;
+  background: #222;
+  transition: 0.3s;
+}
+
+.language-option.selected {
+  background: #00bcd4;
+  border-color: #00bcd4;
+  color: #0f0f0f;
+}
+
+/* Main layout wrapper */
+.content {
+  display: flex;
+  gap: 24px;
+}

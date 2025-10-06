@@ -1,0 +1,185 @@
+.results-container {
+  background: #0a0a0a; /* dark */
+  color: #fafafa; /* light */
+  font-family: Inter, sans-serif;
+  padding: 2rem;
+  max-width: 900px;
+  margin: 2rem auto;
+  border-radius: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+.toggle-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  color: #a1a1aa;
+}
+
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 24px;
+}
+.toggle-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #27272a;
+  border-radius: 9999px;
+  transition: 0.3s;
+}
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  top: 3px;
+  background: #fafafa;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+input:checked + .slider {
+  background: #fafafa;
+}
+input:checked + .slider:before {
+  transform: translateX(26px);
+  background: #0a0a0a;
+}
+
+.match-outcome {
+  text-align: center;
+  padding: 2rem;
+  border-radius: 1rem;
+  margin-bottom: 2rem;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #fff;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.match-outcome.victory { 
+  background: linear-gradient(135deg, #4CAF50 0%, #8BC34A 100%);
+  border: 1px solid #66BB6A;
+}
+
+.match-outcome.defeat { 
+  background: linear-gradient(135deg, #F44336 0%, #EF5350 100%);
+  border: 1px solid #E57373;
+}
+
+.match-outcome h2 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.match-outcome p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  opacity: 0.95;
+}
+
+.outcome-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-top: 0.5rem;
+}
+
+.player-comparison {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 2rem 0;
+}
+.player-card {
+  flex: 1;
+  text-align: center;
+  border: 1px solid #27272a;
+  border-radius: 1rem;
+  padding: 1.5rem;
+}
+.player-card.winner { border-color: #3b82f6; }
+.vs-badge {
+  margin: 0 1rem;
+  font-weight: bold;
+}
+
+.stats-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+.stat-card {
+  background: #111;
+  border: 1px solid #27272a;
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.rank-meter {
+  margin-bottom: 2rem;
+}
+.meter-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.meter-visual {
+  background: #27272a;
+  height: 8px;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.meter-fill {
+  height: 100%;
+  transition: width 0.4s;
+}
+.meter-fill.positive { background: #fafafa; }
+.meter-fill.negative { background: #a1a1aa; }
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.action-btn {
+  padding: 0.75rem 1.25rem;
+  border-radius: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #27272a;
+  background: transparent;
+  color: #fafafa;
+  transition: 0.3s;
+}
+.action-btn:hover {
+  background: #fafafa;
+  color: #0a0a0a;
+}

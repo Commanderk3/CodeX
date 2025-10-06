@@ -1,0 +1,210 @@
+[
+  {
+    "title": "Palindrome Number",
+    "problem_id": "3",
+    "difficulty": "Easy",
+    "topics": ["Math"],
+    "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
+    "function_name": "isPalindrome",
+    "test_cases": [
+      {
+        "input": {
+          "x": 121
+        },
+        "output": "True"
+      },
+      {
+        "input": {
+          "x": -121
+        },
+        "output": "False"
+      },
+      {
+        "input": {
+          "x": 10
+        },
+        "output": "False"
+      }
+    ],
+    "boilerplate": {
+      "python": "def isPalindrome(x):",
+      "c++": "bool isPalindrome(int x) {\n}",
+      "java": "public boolean isPalindrome(int x) {\n}",
+      "javascript": "function isPalindrome(x) {\n}"
+    },
+    "template": {
+      "python": "USER_CODE\nresult = isPalindrome(INPUT1)\nprint(result)",
+      "c++": "#include <iostream>\nusing namespace std;\nUSER_CODE\nint main() {\n     int x = INPUT1;\n     bool result = isPalindrome(x);\n     cout << (result ? \"true\" : \"false\") << endl;\n     return 0;\n}",
+      "java": "public class Main {\n    public static boolean isPalindrome(int x) {\n        USER_CODE\n    }\n    \n    \n     public static void main(String[] args) {\n         int x = INPUT1;\n         boolean result = isPalindrome(x);\n         System.out.println(result);\n     }\n}",
+      "javascript": "USER_CODE\n const result = isPalindrome(INPUT1);\n console.log(result);"
+    }
+  },
+  {
+    "title": "Longest Substring Without Repeating Characters",
+    "problem_id": "4",
+    "difficulty": "Medium",
+    "topics": ["Hash Table", "String", "Sliding Window"],
+    "description": "Given a string s, find the length of the longest substring without repeating characters.",
+    "function_name": "lengthOfLongestSubstring",
+    "test_cases": [
+      {
+        "input": {
+          "s": "abcabcbb"
+        },
+        "output": 3
+      },
+      {
+        "input": {
+          "s": "bbbbb"
+        },
+        "output": 1
+      },
+      {
+        "input": {
+          "s": "pwwkew"
+        },
+        "output": 3
+      }
+    ],
+    "boilerplate": {
+      "python": "def lengthOfLongestSubstring(s):",
+      "c++": "int lengthOfLongestSubstring(string s) {\n}",
+      "java": "public static int lengthOfLongestSubstring(String s) {\n}",
+      "javascript": "function lengthOfLongestSubstring(s) {\n}"
+    },
+    "template": {
+      "python": "USER_CODE\ns = INPUT1\nresult = lengthOfLongestSubstring(s)\nprint(result)",
+      "c++": "#include <iostream>\n#include <string>\nusing namespace std;\n\nUSER_CODE\n}\n\nint main() {\n    string s = INPUT1;\n    int result = lengthOfLongestSubstring(s);\n    cout << result << endl;\n    return 0;\n}",
+      "java": "public class Main {\n    USER_CODE\n    }\n    public static void main(String[] args) {\n        String s = INPUT1;\n        int result = lengthOfLongestSubstring(s);\n        System.out.println(result);\n    }\n}",
+      "javascript": "USER_CODE\n}\n\nconst s = INPUT1;\nconst result = lengthOfLongestSubstring(s);\nconsole.log(result);"
+    }
+  },
+  {
+    "title": "Search in Rotated Sorted Array",
+    "problem_id": "8",
+    "difficulty": "Medium",
+    "topics": ["Array", "Binary Search"],
+    "description": "Given an integer array nums sorted in ascending order (with distinct values), and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.",
+    "function_name": "search",
+    "test_cases": [
+      {
+        "input": {
+          "nums": "[4, 5, 6, 7, 0, 1, 2]",
+          "target": 0
+        },
+        "output": 4
+      },
+      {
+        "input": {
+          "nums": "[4, 5, 6, 7, 0, 1, 2]",
+          "target": 3
+        },
+        "output": -1
+      },
+      {
+        "input": {
+          "nums": "[1]",
+          "target": 0
+        },
+        "output": -1
+      }
+    ],
+
+    "boilerplate": {
+      "python": "def search(nums, target):",
+      "c++": "int search(vector<int>& nums, int target) {\n}",
+      "java": "public static int search(int[] nums, int target) {\n}",
+      "javascript": "function search(nums, target) {\n}"
+    },
+    "template": {
+      "python": "USER_CODE\n\nnums = INPUT1\ntarget = INPUT2\nresult = search(nums, target)\nprint(result)",
+      "c++": "#include <iostream>\n#include <vector>\nusing namespace std;\n\nUSER_CODE\n\nint main() {\n    vector<int> nums = INPUT1;\n    int target = INPUT2;\n    int result = search(nums, target);\n    cout << result << endl;\n    return 0;\n}",
+      "java": "public class Main {\n    USER_CODE\n\n    public static void main(String[] args) {\n        int[] nums = INPUT1;\n        int target = INPUT2;\n        int result = search(nums, target);\n        System.out.println(result);\n    }\n}",
+      "javascript": "USER_CODE\n\nconst nums = INPUT1;\nconst target = INPUT2;\nconst result = search(nums, target);\nconsole.log(result);"
+    }
+  },
+  {
+    "title": "Remove Nth Node From End of List",
+    "problem_id": "11",
+    "difficulty": "Medium",
+    "topics": ["Linked List", "Two Pointers"],
+    "description": "Given the head of a linked list, remove the nth node from the end of the list and return its head.",
+    "function_name": "removeNthFromEnd",
+    "test_cases": [
+      {
+        "input": {
+          "head": "[1, 2, 3, 4, 5]",
+          "n": 2
+        },
+        "output": "[1, 2, 3, 5]"
+      },
+      {
+        "input": {
+          "head": "[1]",
+          "n": 1
+        },
+        "output": "[]"
+      },
+      {
+        "input": {
+          "head": "[1, 2]",
+          "n": 1
+        },
+        "output": "[1]"
+      }
+    ],
+
+    "boilerplate": {
+      "python": "def removeNthFromEnd(head, n):",
+      "c++": "ListNode* removeNthFromEnd(ListNode* head, int n) {\n}",
+      "java": "public ListNode removeNthFromEnd(ListNode head, int n) {\n}",
+      "javascript": "function removeNthFromEnd(head, n) {\n}"
+    },
+    "template": {
+      "python": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\nUSER_CODE\n\nhead = list_to_linkedlist(${input_head})\nresult_head = removeNthFromEnd(head, ${input_n})\nresult = linkedlist_to_list(result_head)\nprint(result)",
+      "c++": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nstruct ListNode {\n    int val;\n    ListNode *next;\n    ListNode() : val(0), next(nullptr) {}\n    ListNode(int x) : val(x), next(nullptr) {}\n    ListNode(int x, ListNode *next) : val(x), next(next) {}\n};\n\nUSER_CODE\n\nint main() {\n    ListNode* head = list_to_linkedlist(${input_head});\n    ListNode* result_head = removeNthFromEnd(head, ${input_n});\n    vector<int> result = linkedlist_to_list(result_head);\n}",
+      "java": "class ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\npublic class Main {\n    USER_CODE\n    \n    public static void main(String[] args) {\n        ListNode head = listToLinkedlist(${input_head});\n        ListNode resultHead = removeNthFromEnd(head, ${input_n});\n        List<Integer> result = linkedlistToList(resultHead);\n        System.out.println(result);\n    }\n}",
+      "javascript": "function ListNode(val, next) {\n    this.val = (val===undefined ? 0 : val);\n    this.next = (next===undefined ? null : next);\n}\n\nUSER_CODE\n\nconst head = listToLinkedlist(${input_head});\nconst resultHead = removeNthFromEnd(head, ${input_n});\nconst result = linkedlistToList(resultHead);\nconsole.log(result);"
+    }
+  },
+  {
+    "title": "Letter Combinations of a Phone Number",
+    "problem_id": "12",
+    "difficulty": "Medium",
+    "topics": ["Hash Table", "String", "Backtracking"],
+    "description": "Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.",
+    "function_name": "letterCombinations",
+    "test_cases": [
+      {
+        "input": {
+          "digits": "23"
+        },
+        "output": "[\"ad\", \"ae\", \"af\", \"bd\", \"be\", \"bf\", \"cd\", \"ce\", \"cf\"]"
+      },
+      {
+        "input": {
+          "digits": ""
+        },
+        "output": "[]"
+      },
+      {
+        "input": {
+          "digits": "2"
+        },
+        "output": "[\"a\", \"b\", \"c\"]"
+      }
+    ],
+    "boilerplate": {
+      "python": "def letterCombinations(digits):",
+      "c++": "vector<string> letterCombinations(string digits) {\n}",
+      "java": "public List<String> letterCombinations(String digits) {\n}",
+      "javascript": "function letterCombinations(digits) {\n}"
+    },
+    "template": {
+      "python": "USER_CODE    \nresult = letterCombinations(INPUT1)\nprint(result)",
+      "c++": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nUSER_CODE    \n}\n\nint main() {\n    string digits = INPUT1;\n    vector<string> result = letterCombinations(digits);\n}",
+      "java": "import java.util.*;\n\npublic class Main {\n    USER_CODE\n            }\n    \n    \n    public static void main(String[] args) {\n        String digits = INPUT1;\n        List<String> result = letterCombinations(digits);\n        // System.out.println(result);\n    }\n}",
+      "javascript": "USER_CODE    \n}\n\nconst result = letterCombinations(INPUT1);\nconsole.log(result);"
+    }
+  }
+]

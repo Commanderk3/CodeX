@@ -1,44 +1,39 @@
 import "./TestCaseWindow.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState, memo } from "react";
 
-const TestCaseWindow = ({question, result}) => {
+const TestCaseWindow = ({ tests, result }) => {
+
   const [testCases, setTestCases] = useState(null);
-  const [status, setStatus] = useState(null);
 
-  useEffect(()=> {
-    if (result === true) {
-      setStatus("Accepted")
-    } else if (result === false) {
-      setStatus("Failed");
-    } else {
-      setStatus("");
+  // Function to decide if a test case is correct or wrong
+  const getTestCaseStatus = (index) => {
+    if (!result) return "";
+    if (result.resultStatus.resultStatus === true) {
+      return "✔️";
     }
-  }, [result]);
+    if (result.resultStatus.resultStatus === false && index <= result.resultStatus.mismatchedAt) {
+      return "❌";
+    }
+    return "";
+  };
 
   return (
     <div className="test-case-window">
-      <div>{status}</div>
-      <div>
-        {question.test_cases.map((test, index) => {
-          return (
-            <div key={index} className="case-number">
-              <button
-                onClick={() => setTestCases(index)}
-              >
-                Case {index + 1}
-              </button>
-            </div>
-          );
-        })}
+      <div className="test-cases">
+        {tests.map((test, index) => (
+          <div key={index} className="case-number">
+            <button onClick={() => setTestCases(index)}>
+              Case {index + 1} {getTestCaseStatus(index)}
+            </button>
+          </div>
+        ))}
       </div>
+
       <div>
-        {testCases !== null && (
+        {testCases !== null && tests[testCases] && (
           <div className="selected-case">
-            <p>Input: {question.test_cases[testCases].input.x}</p>
-            <p>
-              Expected Output:{" "}
-              {question.test_cases[testCases].output.toString()}
-            </p>
+            <p>Input: {tests[testCases].input.x}</p>
+            <p>Expected Output: {tests[testCases].output.toString()}</p>
           </div>
         )}
       </div>

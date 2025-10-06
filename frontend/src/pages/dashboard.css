@@ -1,0 +1,282 @@
+.dashboard-container {
+  margin: 0 auto;
+  padding: 24px;
+  background: #0f0f0f; /* main dark color */
+  color: #e5e5e5;      /* light text */
+  font-family: 'Inter', sans-serif;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #3b82f6;
+}
+
+.dashboard-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+.past-matches {
+  margin-top: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.past-matches-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #3b82f6;
+}
+
+.matches-list.two-columns {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* two columns */
+  gap: 12px;
+}
+
+.match-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.match-item.victory {
+  border-left: 4px solid #22c55e;
+}
+
+.match-item.defeat {
+  border-left: 4px solid #ef4444;
+}
+
+.match-opponent {
+  font-weight: 600;
+}
+
+.match-result {
+  font-size: 13px;
+}
+
+.match-score {
+  font-size: 12px;
+  color: #a5b4cb;
+}
+
+@media (max-width: 600px) {
+  .matches-list.two-columns {
+    grid-template-columns: 1fr; /* fallback to single column */
+  }
+}
+
+/* Section Cards */
+.section {
+  background: #181818;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #262626;
+  transition: border 0.2s, transform 0.2s;
+}
+
+.section:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+}
+
+.section-title {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: #3b82f6;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* User Profile */
+.user-profile {
+  grid-column: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: #3b82f6;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 28px;
+  color: #0f0f0f;
+}
+
+.user-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.user-status {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 20px;
+  background: #3b82f6;
+  color: #0f0f0f;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* Details */
+.profile-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.detail-card {
+  background: #202020;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.detail-label {
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.detail-value {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Rooms */
+.room-card {
+  background: #202020;
+  padding: 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.room-card:hover {
+  background: #262626;
+}
+
+.room-name {
+  font-weight: 600;
+}
+
+.room-details {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.room-join {
+  background: #3b82f6;
+  color: #0f0f0f;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background 0.2s;
+}
+
+.room-join:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.room-join:disabled {
+  background: #404040;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Action Buttons */
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 10px;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.action-btn:hover {
+  transform: translateY(-2px);
+}
+
+.find-match {
+  background: #3b82f6;
+  color: #0f0f0f;
+  width: 50%;
+}
+
+.create-room {
+  background: #181818;
+  color: #e5e5e5;
+  width: 50%;
+  border: 1px solid #3b82f6;
+}
+
+.create-room:hover {
+  background: #202020;
+}
+
+/* Loader */
+.loader {
+  width: 48px;
+  height: 48px;
+  margin-right: 100px;
+  border: 5px solid #262626;
+  border-radius: 50%;
+  border-top-color: #3b82f6;
+  animation: spin 1s linear infinite;
+}
+
+.matching-indicator {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.matching-indicator{
+  align-items: center;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+}

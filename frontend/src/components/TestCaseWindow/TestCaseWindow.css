@@ -1,60 +1,21 @@
 .test-case-window {
-  height: 100%;
+  padding: 1rem;
+}
+
+.test-cases {
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.test-cases-container,
-.test-results-container {
-  padding: 10px;
-  overflow-y: auto;
-  height: 100%;
+.case-number button {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  cursor: pointer;
 }
 
-.test-case-item,
-.test-result-item {
-  margin-bottom: 10px;
-}
-
-.test-case-item pre,
-.test-result-item pre {
-  background-color: #f5f5f5;
-  padding: 5px;
-  border-radius: 3px;
-  margin: 5px 0;
-}
-
-.test-result-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 5px;
-}
-
-.test-case-label {
-  font-weight: bold;
-  margin-right: 10px;
-}
-
-.test-status {
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.8em;
-}
-
-.test-status.passed {
-  background-color: #e6f7e6;
-  color: #28a745;
-}
-
-.test-status.failed {
-  background-color: #ffe6e6;
-  color: #dc3545;
-}
-
-.console-output {
-  padding: 10px;
-  font-family: monospace;
-  white-space: pre-wrap;
-  height: 100%;
-  overflow-y: auto;
+.selected-case {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-top: 1px solid #ddd;
 }
