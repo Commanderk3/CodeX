@@ -9,9 +9,18 @@ const { Server } = require("socket.io");
 dotenv.config();
 // routes
 const authRoutes = require('./src/routes/auth');
+const userRoutes = require("./src/routes/user");
+const roomRoutes = require("./src/routes/rooms")
+
+const auth = require("./src/middleware/auth");
+
+// sockets
 const matchMaking = require("./src/sockets/matchMaking");
 const submitCode = require("./src/sockets/submitCode");
-const userRoutes = require("./src/routes/user");
+const roomActions = require("./src/sockets/roomSockets");
+
+// socketManager
+const { notifyDisconnection } = require("./src/services/roomManager")
 
 const app = express();
 const server = http.createServer(app);
@@ -35,7 +44,8 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use('/api/auth', authRoutes);
 
-app.use("/api/user", userRoutes);
+app.use("/api/user", auth, userRoutes);
+app.use("/api/roomlist", auth, roomRoutes);
 
 // Routes
 app.get("/", (req, res) => {
@@ -66,8 +76,10 @@ io.on("connection", (socket) => {
 
   matchMaking.matchMaking(socket, io);
   submitCode.submitCode(socket, io);
+  roomActions.roomActions(socket, io);
 
   socket.on("disconnect", () => {
+    notifyDisconnection(socket.id);
     console.log("Client disconnected:", socket.id);
   });
 })

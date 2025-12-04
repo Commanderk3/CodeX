@@ -1,5 +1,5 @@
 // contexts/UserContext.js
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { userDetails } from '../services/api';
 
 const UserContext = createContext();
@@ -16,30 +16,32 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      console.log("user details called");
-      try {
-        const token = localStorage.getItem("token");
-        if (!token) {
-          setLoading(false);
-          return;
-        }
-        const res = await userDetails(token);
-        console.log("Fetched user details:", res.data);
-        setUser(res.data);
-      } catch (err) {
-        console.error("Error fetching user:", err);
-      } finally {
-        setLoading(false);
+  const fetchUser = async () => {
+    console.log("Fetching user details...");
+    setLoading(true);
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        return;
       }
-    };
+      const res = await userDetails(token);
+      console.log("Fetched user details:", res.data);
+      setUser(res.data);
+    } catch (err) {
+      console.error("Error fetching user:", err);
+      setUser(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchUser();
   }, []);
 
   return (
-    <UserContext.Provider value={{ user, setUser, loading }}>
+    <UserContext.Provider value={{ user, setUser, loading, fetchUser }}>
       {children}
     </UserContext.Provider>
   );

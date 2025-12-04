@@ -1,0 +1,213 @@
+.dialog-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(11, 11, 15, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.create-room-dialog {
+  background: #111317;
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+  width: 90%;
+  max-width: 450px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: slideUp 0.2s ease-out;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Header */
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #1f2937;
+}
+
+.dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #60a5fa;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dialog-title::before { content: "➕"; }
+
+/* Close button */
+.close-button {
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  color: #9ca3af;
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.close-button:hover {
+  background: #1f1f23;
+  border-color: #3b82f6;
+  color: #e5e7eb;
+}
+
+/* Form */
+.room-form { padding: 24px; }
+.form-group { margin-bottom: 20px; }
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+.form-input,
+.form-select {
+  width: 100%;
+  padding: 12px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  color: #e5e7eb;
+  font-size: 0.875rem;
+  transition: 0.2s;
+}
+.form-input:focus,
+.form-select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+.form-input::placeholder { color: #6b7280; }
+
+/* Privacy options */
+.privacy-options {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
+.privacy-option { flex: 1; }
+.privacy-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 8px;
+  color: #9ca3af;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: 0.2s;
+}
+.privacy-option input[type="radio"] { display: none; }
+.privacy-option input:checked + .privacy-label {
+  border-color: #3b82f6;
+  background: rgba(59, 130, 246, 0.1);
+  color: #60a5fa;
+}
+.privacy-label:hover {
+  border-color: #374151;
+  background: #1f1f23;
+}
+
+/* Buttons */
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #1f2937;
+}
+.btn {
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-primary {
+  background: #3b82f6;
+  color: #0b0b0f;
+}
+.btn-primary:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
+.btn-secondary {
+  background: #18181b;
+  color: #e5e7eb;
+  border: 1px solid #27272a;
+}
+.btn-secondary:hover {
+  background: #1f1f23;
+  border-color: #374151;
+  transform: translateY(-1px);
+}
+
+/* Password field */
+.password-field { position: relative; }
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+.password-toggle:hover {
+  color: #e5e7eb;
+  background: #27272a;
+}
+
+/* Validation & states */
+.form-input:invalid { border-color: #ef4444; }
+.form-input:valid { border-color: #22c55e; }
+.btn-primary:disabled {
+  background: #2d2d30;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Success animation */
+@keyframes successPulse {
+  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(34, 197, 94, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+}
+.create-success { animation: successPulse 1s; }
+
+/* Responsive */
+@media (max-width: 480px) {
+  .create-room-dialog { margin: 20px; }
+  .privacy-options,
+  .dialog-actions { flex-direction: column; }
+  .btn { width: 100%; justify-content: center; }
+}
+
+/* Scrollbar */
+.create-room-dialog::-webkit-scrollbar { width: 6px; }
+.create-room-dialog::-webkit-scrollbar-thumb {
+  background: #3b82f6;
+  border-radius: 3px;
+}
+.create-room-dialog::-webkit-scrollbar-thumb:hover { background: #2563eb; }

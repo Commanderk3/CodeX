@@ -1,44 +1,52 @@
+/* === DASHBOARD (Shadcn-style) === */
+
 .dashboard-container {
-  margin: 0 auto;
+  margin: auto;
+  max-width: 90%;
   padding: 24px;
-  background: #0f0f0f; /* main dark color */
-  color: #e5e5e5;      /* light text */
+  background: #0b0b0f; /* dark neutral */
+  color: #e5e7eb; /* neutral text */
   font-family: 'Inter', sans-serif;
 }
 
+/* Logo */
 .logo {
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 22px;
   font-weight: 700;
-  color: #3b82f6;
+  color: #3b82f6; /* blue-500 */
 }
 
+/* Layout */
 .dashboard-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
 
+/* Past Matches */
 .past-matches {
   margin-top: 20px;
-  background: rgba(255, 255, 255, 0.05);
+  background: #111317;
   border-radius: 12px;
-  padding: 10px;
+  padding: 16px;
+  border: 1px solid #1f2937;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.15);
 }
 
 .past-matches-title {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 10px;
-  color: #3b82f6;
+  color: #60a5fa; /* blue-400 */
 }
 
 .matches-list.two-columns {
   list-style: none;
   display: grid;
-  grid-template-columns: 1fr 1fr; /* two columns */
+  grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
@@ -48,9 +56,16 @@
   gap: 4px;
   padding: 10px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: #18181b;
   font-size: 14px;
   font-weight: 500;
+  border: 1px solid #27272a;
+  transition: all 0.2s ease;
+}
+
+.match-item:hover {
+  background: #1f1f23;
+  border-color: #3b82f6;
 }
 
 .match-item.victory {
@@ -63,30 +78,34 @@
 
 .match-opponent {
   font-weight: 600;
+  color: #e5e7eb;
 }
 
 .match-result {
   font-size: 13px;
+  color: #9ca3af;
 }
 
 .match-score {
   font-size: 12px;
-  color: #a5b4cb;
+  color: #a1a1aa;
 }
 
+/* Responsive grid */
 @media (max-width: 600px) {
   .matches-list.two-columns {
-    grid-template-columns: 1fr; /* fallback to single column */
+    grid-template-columns: 1fr;
   }
 }
 
-/* Section Cards */
+/* === SECTIONS === */
 .section {
-  background: #181818;
+  background: #111317;
   border-radius: 12px;
   padding: 20px;
-  border: 1px solid #262626;
-  transition: border 0.2s, transform 0.2s;
+  border: 1px solid #1f2937;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
 }
 
 .section:hover {
@@ -97,13 +116,13 @@
 .section-title {
   font-size: 18px;
   margin-bottom: 16px;
-  color: #3b82f6;
+  color: #60a5fa;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-/* User Profile */
+/* === USER PROFILE === */
 .user-profile {
   grid-column: 1;
   display: flex;
@@ -126,7 +145,8 @@
   justify-content: center;
   align-items: center;
   font-size: 28px;
-  color: #0f0f0f;
+  color: #0b0b0f;
+  box-shadow: 0 2px 6px rgba(59, 130, 246, 0.3);
 }
 
 .user-name {
@@ -139,12 +159,12 @@
   padding: 4px 10px;
   border-radius: 20px;
   background: #3b82f6;
-  color: #0f0f0f;
+  color: #0b0b0f;
   font-size: 12px;
   font-weight: 500;
 }
 
-/* Details */
+/* === DETAILS === */
 .profile-details {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -152,9 +172,14 @@
 }
 
 .detail-card {
-  background: #202020;
+  background: #18181b;
   padding: 12px;
   border-radius: 8px;
+  border: 1px solid #27272a;
+}
+
+.detail-card:hover {
+  border-color: #3b82f6;
 }
 
 .detail-label {
@@ -166,25 +191,29 @@
 .detail-value {
   font-size: 15px;
   font-weight: 500;
+  color: #f4f4f5;
 }
 
-/* Rooms */
+/* === ROOMS === */
 .room-card {
-  background: #202020;
+  background: #18181b;
   padding: 16px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  transition: background 0.2s;
+  border: 1px solid #27272a;
+  transition: all 0.2s ease;
 }
 
 .room-card:hover {
-  background: #262626;
+  border-color: #3b82f6;
+  background: #1f1f23;
 }
 
 .room-name {
   font-weight: 600;
+  color: #f4f4f5;
 }
 
 .room-details {
@@ -192,28 +221,49 @@
   color: #9ca3af;
 }
 
-.room-join {
-  background: #3b82f6;
-  color: #0f0f0f;
+/* === BUTTONS === */
+.room-join,
+.action-btn {
   border: none;
-  padding: 8px 14px;
-  border-radius: 6px;
-  cursor: pointer;
+  border-radius: 8px;
   font-weight: 600;
-  transition: background 0.2s;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.room-join:hover:not(:disabled) {
+/* Primary Button */
+.room-join,
+.find-match {
+  background: #3b82f6;
+  color: #0b0b0f;
+  padding: 8px 14px;
+}
+
+.room-join:hover:not(:disabled),
+.find-match:hover {
   background: #2563eb;
 }
 
+/* Disabled Button */
 .room-join:disabled {
-  background: #404040;
+  background: #2d2d30;
   color: #9ca3af;
   cursor: not-allowed;
 }
 
-/* Action Buttons */
+/* Secondary Button */
+.create-room {
+  background: #111317;
+  color: #e5e7eb;
+  border: 1px solid #3b82f6;
+  padding: 8px 14px;
+}
+
+.create-room:hover {
+  background: #18181b;
+}
+
+/* Action Buttons Layout */
 .action-btn {
   display: flex;
   align-items: center;
@@ -221,60 +271,38 @@
   gap: 8px;
   padding: 16px;
   border-radius: 10px;
-  border: none;
   font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
 }
 
 .action-btn:hover {
   transform: translateY(-2px);
 }
 
-.find-match {
-  background: #3b82f6;
-  color: #0f0f0f;
-  width: 50%;
-}
-
-.create-room {
-  background: #181818;
-  color: #e5e5e5;
-  width: 50%;
-  border: 1px solid #3b82f6;
-}
-
-.create-room:hover {
-  background: #202020;
-}
-
-/* Loader */
+/* === LOADER === */
 .loader {
   width: 48px;
   height: 48px;
   margin-right: 100px;
-  border: 5px solid #262626;
-  border-radius: 50%;
+  border: 5px solid #1f2937;
   border-top-color: #3b82f6;
+  border-radius: 50%;
   animation: spin 1s linear infinite;
 }
 
 .matching-indicator {
   display: flex;
-  flex-direction: row;
+  align-items: center;
   justify-content: center;
 }
 
-.matching-indicator{
-  align-items: center;
-}
-
+/* Spin Animation */
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Responsive */
+/* === RESPONSIVE === */
 @media (max-width: 900px) {
   .dashboard-content {
     grid-template-columns: 1fr;

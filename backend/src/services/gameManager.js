@@ -2,6 +2,7 @@ const User = require("../models/User");
 const questions = require("../../question2.json");
 const { matchResults } = require("./matchResults");
 
+
 let activeRooms = [];
 const MATCH_DURATION = 60 * 1000;
 
@@ -105,117 +106,26 @@ function createClassicGame(player1, player2, io) {
   room.timerId = setTimeout(() => {
     endGame(roomId, io);
   }, MATCH_DURATION);
-  console.log("Timer started for room:", room.timerId);
   return room;
 }
 
-async function createRoom(admin, io) {
-  const roomId = generateRoomCode();
+// function sendRoomDetails(roomObj, roomId, io) {
+//   const playersForClient = roomObj.players.map((player) => ({
+//     playerName: player.playerName,
+//     avatar: player.avatar,
+//     testCasePassed: player.testCasePassed || 0,
+//   }));
 
-  let players = playerList.map((player) => {
-    player.socket.join(roomId);
+//   io.to(roomId).emit("matchFound", {
+//     roomId,
+//     players: playersForClient,
+//     question: roomObj.question,
+//     createdAt: roomObj.createdAt,
+//     expiresAt: roomObj.expiresAt,
+//   });
+// }
 
-    return {
-      playerName: player.playerName,
-      avatar: player.avatar,
-      rating: player.rating,
-      testCasePassed: 0,
-      lastSubmittedTime: endTime,
-    };
-  });
-
-  const room = {
-    roomId,
-    createdAt: startTime,
-    expiresAt: endTime,
-    timerId: null,
-    question,
-    players,
-  };
-
-  activeRooms.push(room);
-  console.log(`Room created: ${roomId}`);
-
-  for (let idx = 0; idx < players.length; idx++) {
-    const p = players[idx];
-    const totalTestCases = room.question.test_cases.length;
-    let opponents = [];
-    if (players.lenght == 2) {
-      opponents = players
-        .filter((_, i) => i !== idx)
-        .map((o) => ({
-          playerName: o.playerName,
-          avatar: o.avatar,
-          rating: o.rating,
-          testCasePassed: 0,
-          lastSubmittedTime: endTime,
-          timeTaken: 0,
-        }));
-
-      await User.findOneAndUpdate(
-        { username: p.playerName },
-        {
-          $push: {
-            matchHistory: {
-              roomId,
-              opponent: opponents,
-              result: "live",
-              totalTestCases,
-              testCasePassed: 0,
-              timeTaken: 0,
-              questionTitle: question.title,
-              createdAt: startTime,
-            },
-          },
-        }
-      );
-    }
-  }
-
-  sendRoomDetails(room, roomId, io); // classic match
-  room.timerId = setTimeout(() => {
-    endGame(roomId, io);
-  }, MATCH_DURATION);
-
-  return room;
-}
-
-function startGameInRoom() {
-  const startTime = Date.now();
-  const endTime = startTime + MATCH_DURATION;
-  
-}
-
-function notifyRoomCreation() {
-  io.to(player.socket).emit();
-}
-
-function joinRoom(roomId, player, io) {
-  const room = findRoomById(roomId);
-  if (!room) {
-    console.log("Room not found!");
-    return;
-  }
-  player.socket.join(roomId);
-}
-
-function sendRoomDetails(roomObj, roomId, io) {
-  const playersForClient = roomObj.players.map((player) => ({
-    playerName: player.playerName,
-    avatar: player.avatar,
-    testCasePassed: player.testCasePassed || 0,
-  }));
-
-  io.to(roomId).emit("matchFound", {
-    roomId,
-    players: playersForClient,
-    question: roomObj.question,
-    createdAt: roomObj.createdAt,
-    expiresAt: roomObj.expiresAt,
-  });
-}
-
-function rejoinRoom(socket, roomId, playerName) {
+function rejoinGame(socket, roomId, playerName) {
   const room = findRoomById(roomId);
   if (!room) return false;
 
@@ -455,9 +365,13 @@ function handlePlayerWin(roomId, io) {
 
 module.exports = {
   createClassicGame,
-  rejoinRoom,
+  rejoinGame,
+  endGame,
   handlePlayerWin,
   getActiveRooms,
   setActiveRooms,
+  generateRoomCode,
   updateTestCase,
+  findRoomById,
+  findplayerInRoom
 };

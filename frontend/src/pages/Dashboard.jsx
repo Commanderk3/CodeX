@@ -2,91 +2,63 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import Navbar from "../components/Navbar";
-import "./dashboard.css";
+import CreateRoom from "../components/CreateRoom/CreateRoom";
+import "./styles/dashboard.css";
 import socket from "../socket";
+import RoomList from "../components/RoomList";
 
 export default function Dashboard() {
   const { user, loading } = useUser();
   const [room, setRoom] = useState(null);
-  const [messages, setMessages] = useState([]);
+  const [winRate, setWinRate] = useState(0);
   const [isFindingMatch, setIsFindingMatch] = useState(false);
-
-  const [rooms, setRooms] = useState([
-    {
-      id: 1,
-      name: "JavaScript Challengers",
-      players: 3,
-      maxPlayers: 4,
-      language: "JavaScript",
-      level: "Intermediate",
-    },
-    {
-      id: 2,
-      name: "Python Pros",
-      players: 2,
-      maxPlayers: 2,
-      language: "Python",
-      level: "Advanced",
-    },
-    {
-      id: 3,
-      name: "Java Beginners",
-      players: 1,
-      maxPlayers: 3,
-      language: "Java",
-      level: "Beginner",
-    },
-    {
-      id: 4,
-      name: "C++ Masters",
-      players: 4,
-      maxPlayers: 4,
-      language: "C++",
-      level: "Advanced",
-    },
-  ]);
+  const [showCreateRoom, setShowCreateRoom] = useState(false);
 
   const navigate = useNavigate();
+
+  const calculateWinRate = (matches) => {
+    if (!matches || matches.length === 0) return 0;
+    const wins = matches.filter((match) => match.result === "victory").length;
+    return Math.round((wins / matches.length) * 100);
+  };
 
   useEffect(() => {
     if (!user) return;
 
-    const handleMatch = ({ roomId, players, question }) => {
+    setWinRate(calculateWinRate(user.matchHistory));
+
+    const handleMatch = ({
+      roomId,
+      players,
+      question,
+      createdAt,
+      expiresAt,
+    }) => {
       setRoom(roomId);
       setIsFindingMatch(false);
-      console.log("Received match from server:", {
-        username: user.username,
-        avatar: user.avatar,
-        rating: user.rating,
-        roomId,
-        players,
-        question,
-      });
       navigate("./CodeArena", {
         state: {
           username: user.username,
           avatar: user.avatar,
           currRating: user.rating,
+          language: user.language,
           roomId,
           players,
           question,
+          createdAt,
+          expiresAt,
         },
       });
     };
 
-    const handleMessage = (msg) => {
-      setMessages((prev) => [...prev, msg]);
-    };
-
     socket.on("matchFound", handleMatch);
-    socket.on("message", handleMessage);
 
     return () => {
       socket.off("matchFound", handleMatch);
-      socket.off("message", handleMessage);
     };
   }, [user, navigate]);
 
+  // Find Match
   const findMatch = () => {
     if (isFindingMatch) {
       setIsFindingMatch(false);
@@ -114,15 +86,11 @@ export default function Dashboard() {
     });
   };
 
+  // Room Creation
   const createRoom = () => {
-    alert("Create room functionality would go here");
+    setShowCreateRoom(!showCreateRoom);
   };
 
-  const joinRoom = (roomId) => {
-    alert(`Joining room with ID: ${roomId}`);
-  };
-
-  // Show loading state
   if (loading) {
     return (
       <>
@@ -134,8 +102,8 @@ export default function Dashboard() {
     );
   }
 
-  // Show login prompt if no user
   if (!user) {
+    navigate("/signup");
     return (
       <>
         <Navbar />
@@ -150,13 +118,17 @@ export default function Dashboard() {
 
   return (
     <>
+      {showCreateRoom && (
+        <CreateRoom
+          showCreateRoom={showCreateRoom}
+          setShowCreateRoom={setShowCreateRoom}
+        />
+      )}
       <Navbar />
       <div className="dashboard-container">
         <div className="dashboard-content">
           {/* User Profile Section */}
           <section className="section user-profile">
-            <h2 className="section-title">User Profile</h2>
-
             <div className="profile-header">
               <div className="avatar">{user.avatar}</div>
               <div className="user-info">
@@ -171,15 +143,15 @@ export default function Dashboard() {
               </div>
               <div className="detail-card">
                 <div className="detail-label">Skill Level</div>
-                <div className="detail-value">{user.skillLevel}</div>
+                <div className="detail-value">{user.rating}</div>
               </div>
               <div className="detail-card">
                 <div className="detail-label">Matches Played</div>
-                <div className="detail-value">{user.matchesPlayed}</div>
+                <div className="detail-value">{user.matchHistory.length}</div>
               </div>
               <div className="detail-card">
                 <div className="detail-label">Win Rate</div>
-                <div className="detail-value">{user.winRate}%</div>
+                <div className="detail-value">{winRate}%</div>
               </div>
             </div>
 
@@ -190,13 +162,17 @@ export default function Dashboard() {
                 <p>No matches found</p>
               ) : (
                 <ul className="matches-list two-columns">
-                  {user.matchHistory.slice(0, 5).map((match, index) => (
+                  {user.matchHistory.slice(0, 2).map((match, index) => (
                     <li
                       key={index}
                       className={`match-item ${match.result.toLowerCase()}`}
                     >
-                      <span className="match-opponent">{match.opponent}</span>
-                      <span className="match-result">{match.result}</span>
+                      <span className="match-opponent">
+                        {match.opponents.map((op) => op.playerName).join(", ")}
+                      </span>
+                      <span className="match-result">
+                        {match.result.toUpperCase()}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -210,34 +186,7 @@ export default function Dashboard() {
               <i className="fas fa-door-open"></i> Available Rooms
             </h2>
 
-            <div className="rooms-list">
-              {rooms.map((room) => (
-                <div key={room.id} className="room-card">
-                  <div className="room-info">
-                    <div className="room-name">{room.name}</div>
-                    <div className="room-details">
-                      <span>
-                        <i className="fas fa-users"></i> {room.players}/
-                        {room.maxPlayers}
-                      </span>
-                      <span>
-                        <i className="fas fa-code"></i> {room.language}
-                      </span>
-                      <span>
-                        <i className="fas fa-signal"></i> {room.level}
-                      </span>
-                    </div>
-                  </div>
-                  <button
-                    className="room-join"
-                    onClick={() => joinRoom(room.id)}
-                    disabled={room.players >= room.maxPlayers}
-                  >
-                    {room.players >= room.maxPlayers ? "Full" : "Join"}
-                  </button>
-                </div>
-              ))}
-            </div>
+            <RoomList />
           </section>
 
           {/* Action Buttons Section */}

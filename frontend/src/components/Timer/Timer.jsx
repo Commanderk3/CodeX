@@ -1,18 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
-const Timer = ({ initialTime = 300 }) => {
-  const [timeLeft, setTimeLeft] = useState(initialTime);
+const Timer = ({ initialTime }) => {
+  const [timeLeft, setTimeLeft] = useState(initialTime); // time in ms
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+      setTimeLeft((prev) => (prev > 0 ? prev - 1000 : 0)); // decrease by 1s
     }, 1000);
+
     return () => clearInterval(interval);
   }, []);
 
-  const formatTime = (seconds) => {
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
+  const formatTime = (ms) => {
+    const totalSeconds = Math.floor(ms / 1000);
+    const m = Math.floor(totalSeconds / 60);
+    const s = totalSeconds % 60;
     return `${m}:${s.toString().padStart(2, "0")}`;
   };
 

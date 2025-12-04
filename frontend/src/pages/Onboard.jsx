@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Signup from "../components/Onboard/Signup";
 import Login from "../components/Onboard/Login";
-import "./onboard.css";
+import "./styles/onboard.css";
 
 const Onboard = () => {
   const [formMode, setFormMode] = useState("signup");

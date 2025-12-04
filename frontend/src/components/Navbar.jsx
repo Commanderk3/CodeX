@@ -1,5 +1,10 @@
+import { NavLink, useNavigate } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const { user, loading } = useUser();
+
   return (
     <nav className="navbar">
       <div className="nav-logo">
@@ -8,14 +13,61 @@ const Navbar = () => {
       </div>
 
       <ul className="nav-links">
-        <li><a href="#">Dashboard</a></li>
-        <li><a href="#">Matches</a></li>
-        <li><a href="#">Leaderboard</a></li>
-        <li><a href="#">Profile</a></li>
+        <li>
+          <NavLink
+            to="/"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Dashboard
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/matchhistory"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Matches
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/leaderboard"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Leaderboard
+          </NavLink>
+        </li>
+        <li>
+          <NavLink
+            to="/profile"
+            className={({ isActive }) => (isActive ? "active" : "")}
+          >
+            Profile
+          </NavLink>
+        </li>
       </ul>
 
       <div className="nav-actions">
-        <button className="nav-btn">Sign In</button>
+        {user ? (
+          <button
+            style={{ background: "#FF513D" }}
+            className="nav-btn"
+            onClick={() => {
+              navigate("/logout");
+            }}
+          >
+            Log Out
+          </button>
+        ) : (
+          <button
+            className="nav-btn"
+            onClick={() => {
+              navigate("/signup");
+            }}
+          >
+            Sign In
+          </button>
+        )}
       </div>
     </nav>
   );

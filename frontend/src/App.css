@@ -6,7 +6,7 @@
 }
 
 body {
-  background: #0f0f0f;
+  background: #0b0b0f;
   color: #fff;
 }
 
@@ -47,9 +47,10 @@ body {
 
 .navbar {
   display: flex;
+  position: relative;
   justify-content: space-between;
   align-items: center;
-  background: #0f0f0f; /* dark */
+  background: #0b0b0f;
   padding: 14px 24px;
   border-bottom: 1px solid #262626;
 }
@@ -70,14 +71,20 @@ body {
 }
 
 .nav-links a {
-  color: #e5e5e5;
+  color: #aaa;
   text-decoration: none;
-  font-weight: 500;
-  transition: color 0.2s;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: 0.3s;
 }
 
 .nav-links a:hover {
   color: #3b82f6;
+}
+
+.nav-links a.active {
+  color: #3b82f6;
+  font-weight: bold;
 }
 
 .nav-actions .nav-btn {

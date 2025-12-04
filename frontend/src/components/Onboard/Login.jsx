@@ -1,10 +1,12 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { loginUser } from "../../services/api";
 import "./signup.css";
 
 const Login = () => {
-  const [email, setEmail] = useState("johndoe@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -16,8 +18,8 @@ const Login = () => {
 
       const { data } = await loginUser(userData);
       localStorage.setItem("token", data.token);
-
-      alert(`Registration successful for ${userData.username}`);
+      navigate("/");
+      window.location.reload();
     } catch (err) {
       console.error(err);
       alert("Error during registration");

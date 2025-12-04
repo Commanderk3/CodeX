@@ -48,3 +48,13 @@ We are not storing whenever `activeRooms` updates as it would be lots of read/wr
 When user rejoins and its username and roomId exists in activeRooms, it will emit back the current state of the game that the user missed. This includes time, opp-progress, player last progress. 
 
 Display error message in testcasewindow
+
+after refresh in codearena, it should fall
+store max of testcases (best one)
+rejoin is not displaying opponent's avatar and test case passes ✅
+matchHistory needs to be reversed. Also fix ndant live status matches
+when a player wins, it is giving absurd rating change, null/3 test case passed
+
+- add a search bar to search rooms
+
+**USE PROPER NAMING CONVENTION: handler**

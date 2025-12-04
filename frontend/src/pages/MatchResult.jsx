@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
-import "./matchresults.css";
+import "./styles/matchresults.css";
 
 export default function MatchResult() {
   const location = useLocation();
@@ -56,23 +56,27 @@ export default function MatchResult() {
       name: opponent,
       time: opponentTime,
       testCases: `${opponentPassed}/${totalTestCases}`,
-      efficiency: calculateEfficiency(opponentPassed, totalTestCases, opponentTime),
+      efficiency: calculateEfficiency(
+        opponentPassed,
+        totalTestCases,
+        opponentTime
+      ),
     });
-
-    // Calculate rank change
-    const ratingChange = calculateRatingChange(
-      currRating,
-      mappedResult[username].rating,
-    );
 
     setRankChange({
-      value: ratingChange.value,
       current: currRating,
       new: mappedResult[username].rating,
-      percentage: outcome === "victory" ? 70 : outcome === "defeat" ? 30 : 50,
+      value: mappedResult[username].rating - currRating,
     });
-
-  }, [location.state, username, opponent, currRating, mappedResult, totalTestCases, createdAt]);
+  }, [
+    location.state,
+    username,
+    opponent,
+    currRating,
+    mappedResult,
+    totalTestCases,
+    createdAt,
+  ]);
 
   // Helper function to calculate efficiency score
   const calculateEfficiency = (passed, total, time) => {
@@ -81,20 +85,13 @@ export default function MatchResult() {
     return Math.round((accuracy + timeScore) / 2);
   };
 
-  // Helper function to calculate rating change display
-  const calculateRatingChange = (oldRating, newRating) => {
-    const change = newRating - oldRating;
-    const value = change >= 0 ? `+${change}` : `${change}`;
-    return { value, change };
-  };
-
   // Navigation handlers
   const handleFindMatch = () => {
     navigate("/find-match");
   };
 
-  const handleGoDashboard = () => {
-    navigate("/dashboard");
+  const handleReMatch = () => {
+    //
   };
 
   // Show loading state while processing data
@@ -116,23 +113,36 @@ export default function MatchResult() {
         {/* Match outcome section */}
         <div className={`match-outcome ${isVictory}`}>
           <div className="outcome-icon">
-            <i className={
-              isVictory === "victory" ? "fas fa-trophy" : 
-              isVictory === "defeat" ? "fas fa-skull" : "fas fa-handshake"
-            }></i>
+            <i
+              className={
+                isVictory === "victory"
+                  ? "fas fa-trophy"
+                  : isVictory === "defeat"
+                  ? "fas fa-skull"
+                  : "fas fa-handshake"
+              }
+            ></i>
           </div>
           <h1 className="outcome-title">
-            {isVictory === "victory" ? "VICTORY" : 
-             isVictory === "defeat" ? "DEFEAT" : "DRAW"}
+            {isVictory === "victory"
+              ? "VICTORY"
+              : isVictory === "defeat"
+              ? "DEFEAT"
+              : "DRAW"}
           </h1>
         </div>
 
         {/* Player comparison */}
         <div className="player-comparison">
-          <div className={`player-card ${
-            isVictory === "victory" ? "winner" : 
-            isVictory === "defeat" ? "loser" : "draw"
-          }`}>
+          <div
+            className={`player-card ${
+              isVictory === "victory"
+                ? "winner"
+                : isVictory === "defeat"
+                ? "loser"
+                : "draw"
+            }`}
+          >
             <div className="player-avatar">
               <i className="fas fa-user"></i>
             </div>
@@ -144,10 +154,15 @@ export default function MatchResult() {
 
           <div className="vs-badge">VS</div>
 
-          <div className={`player-card ${
-            isVictory === "victory" ? "loser" : 
-            isVictory === "defeat" ? "winner" : "draw"
-          }`}>
+          <div
+            className={`player-card ${
+              isVictory === "victory"
+                ? "loser"
+                : isVictory === "defeat"
+                ? "winner"
+                : "draw"
+            }`}
+          >
             <div className="player-avatar">
               <i className="fas fa-robot"></i>
             </div>
@@ -189,39 +204,50 @@ export default function MatchResult() {
               <i className="fas fa-chart-line"></i>
             </div>
             <div className="stat-title">Rating Change</div>
-            <div className="stat-value">{rankChange.value}</div>
+            <div className="stat-value">
+              {rankChange?.value > 0
+                ? `+${rankChange.value}`
+                : rankChange?.value ?? 0}
+            </div>
           </div>
         </div>
 
         {/* Rank meter */}
         <div className="rank-meter">
           <div className="meter-header">
-            <div className="meter-title">Rank Rating Change</div>
-            <div className={`rank-change ${
-              isVictory === "victory" ? "positive" : 
-              isVictory === "defeat" ? "negative" : "neutral"
-            }`}>
-              <i className={`fas fa-arrow-${
-                isVictory === "victory" ? "up" : 
-                isVictory === "defeat" ? "down" : "right"
-              }`}></i>
-              <span>{rankChange.value} RR</span>
+            <span>New Rating : {rankChange.new}</span>
+            <div
+              className={`rank-change ${
+                isVictory === "victory"
+                  ? "positive"
+                  : isVictory === "defeat"
+                  ? "negative"
+                  : "neutral"
+              }`}
+            >
+              <i
+                className={`fas fa-arrow-${
+                  isVictory === "victory"
+                    ? "up"
+                    : isVictory === "defeat"
+                    ? "down"
+                    : "right"
+                }`}
+              ></i>
+              <span>
+                {rankChange?.value > 0
+                  ? `+${rankChange.value}`
+                  : rankChange?.value ?? 0}{" "}
+                RR
+              </span>
             </div>
           </div>
 
           <div className="meter-visual">
             <div
-              className={`meter-fill ${
-                isVictory === "victory" ? "positive" : 
-                isVictory === "defeat" ? "negative" : "neutral"
-              }`}
-              style={{ width: `${rankChange.percentage}%` }}
+              className={`meter-fill`}
+              style={{ width: `${rankChange.new / 10}%` }}
             ></div>
-          </div>
-
-          <div className="meter-labels">
-            <span>Current: {rankChange.current}</span>
-            <span>New: {rankChange.new}</span>
           </div>
         </div>
 
@@ -230,8 +256,11 @@ export default function MatchResult() {
           <button className="action-btn find-match" onClick={handleFindMatch}>
             <i className="fas fa-search"></i> Find Another Match
           </button>
-          <button className="action-btn go-dashboard" onClick={handleGoDashboard}>
-            <i className="fas fa-home"></i> Go to Dashboard
+          <button
+            className="action-btn"
+            onClick={handleReMatch}
+          >
+            <i className="fas fa-home"></i> Play Again
           </button>
         </div>
       </div>

@@ -14,21 +14,34 @@ const normalize = (val) => {
 
 exports.checkTestCases = (result, testCases) => {
 
+  const codeResult = {
+    errorMsg: null,
+    resultStatus: null,
+    mismatchedAt: null,
+  }
+
   for (let i = 0; i < testCases.length; i++) {
     const res = result[i];
 
     // Compilation / runtime error
     if (res.status_id >= 4 && res.status_id <= 14) {
-      return res.status?.description || "Error";
+      codeResult.errorMsg = res.stderr || res.compile_output || "";
+      codeResult.resultStatus = false;
+      codeResult.mismatchedAt = i;
+      return codeResult;
     }
 
     const actual = normalize(res.stdout || "");
     const expected = normalize(testCases[i].output);
 
     if (actual !== expected) {
-      return { resultStatus: false, mismatchedAt: i };
-    } 
+      codeResult.resultStatus = false;
+      codeResult.mismatchedAt = i;
+      return codeResult;
+    }
   }
 
-  return { resultStatus: true };
+  codeResult.resultStatus = true;
+  codeResult.mismatchedAt = testCases.length;
+  return codeResult;
 };

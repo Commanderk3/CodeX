@@ -160,6 +160,7 @@ input:checked + .slider:before {
 }
 .meter-fill {
   height: 100%;
+  background: #fff;
   transition: width 0.4s;
 }
 .meter-fill.positive { background: #fafafa; }

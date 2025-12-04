@@ -7,6 +7,8 @@ const CodeEditor = ({
   setCurrCode,
   language,
   setLanguage,
+  handleSubmit,
+  runTests,
 }) => {
   return (
     <div className="code-editor-container">
@@ -24,6 +26,14 @@ const CodeEditor = ({
           <option value="java">Java</option>
           <option value="c++">C++</option>
         </select>
+        <div className="action-buttons">
+          <button className="run-btn" onClick={runTests}>
+            Run
+          </button>
+          <button className="submit-btn" onClick={handleSubmit}>
+            Submit
+          </button>
+        </div>
       </div>
       <div className="editor-wrapper">
         <Editor

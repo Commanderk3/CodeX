@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/api";
+
 import "./signup.css";
 
 const Signup = () => {
@@ -11,6 +13,7 @@ const Signup = () => {
 
   const avatars = ["😀", "😎", "🤖", "🦄", "🐱", "🐶", "🦊", "🐼"];
   const languages = ["JavaScript", "C++", "Python", "Java"];
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,19 +26,18 @@ const Signup = () => {
         language: selectedLanguage,
       };
 
-      console.log("Registering user:", userData);
-
-      // Example API call (replace with axios/fetch)
       const { data } = await registerUser(userData);
+
       localStorage.setItem("token", data.token);
 
-      alert(`Registration successful for ${userData.username}`);
+      navigate("/");
+      window.location.reload();
+
     } catch (err) {
       console.error(err);
       alert("Error during registration");
     }
   };
-
 
   return (
     <div className="content">

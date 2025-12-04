@@ -1,14 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Splitter, SplitterPanel } from "primereact/splitter";
-import { Button } from "primereact/button";
+
 import ProblemPanel from "../components/ProblemPanel/ProblemPanel";
 import CodeEditor from "../components/CodeEditor/CodeEditor";
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 import "../App.css";
 import TestCaseWindow from "../components/TestCaseWindow/TestCaseWindow";
-import "./codearena.css";
+import "./styles/codearena.css";
 import Timer from "../components/Timer/Timer";
 import TestCaseYou from "../components/TestCaseMeter/TestCaseYou";
 import TestCaseOpp from "../components/TestCaseMeter/TestCaseOpp";
@@ -18,31 +18,55 @@ import socket from "../socket";
 const CodeArena = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { username, avatar, currRating, roomId, players, question } =
-    location.state || {};
+  const {
+    username,
+    avatar,
+    currRating,
+    lang,
+    roomId,
+    players,
+    question,
+    createdAt,
+    expiresAt,
+  } = location.state;
   const totalTestCases = question.test_cases.length;
   const [language, setLanguage] = useState("javascript");
   const [currCode, setCurrCode] = useState(question.boilerplate["javascript"]);
+  const [errorMsg, setErrorMsg] = useState("");
   const [result, setResult] = useState(null);
   const [playerStats, setPlayerStats] = useState(0);
-  const [opponentStats, setOpponentStats] = useState(0);
   const opponent = players.find((p) => p.playerName !== username);
-  console.log("opponent", opponent);
+  const [opponentStats, setOpponentStats] = useState(opponent.testCasePassed);
+  const timeLeft = expiresAt - Date.now();
+  // console.log("Time left:", timeLeft);
+  // console.log("Time left", expiresAt - createdAt);
 
   const languageIdMap = { "c++": 105, python: 71, javascript: 63, java: 62 };
 
   useEffect(() => {
-    
-    if (!socket.connected) socket.connect();
+    if (socket.disconnected) {
+      navigate("/");
+      return;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!location.state) return;
 
     socket.on("code-result", (data) => {
       setResult(data);
+      console.log("code-result", data);
+      if (data.resultStatus.errorMsg) {
+        setErrorMsg(data.resultStatus.errorMsg);
+      } else {
+        setErrorMsg(null);
+      }
       const passedCases = data.resultStatus.mismatchedAt || 0;
       setPlayerStats(passedCases);
     });
 
     socket.on("opponent-progress", (data) => {
-      const passedCases = data.resultStatus.mismatchedAt || 0;
+      const passedCases = data.mismatchedAt || 0;
       setOpponentStats(passedCases);
       console.log("opponentStats", opponentStats);
     });
@@ -56,22 +80,12 @@ const CodeArena = () => {
         {}
       );
 
-      if (mappedResult[username].draw) {
-        console.log("Its a draw 🎉");
-      } else if (mappedResult[username].won) {
-        console.log("I won! 🏆");
-        setPlayerStats(totalTestCases); // All cases passed
-      } else {
-        console.log("I lost! 😞");
-      }
-
-      console.log("Game ended. Result:", mappedResult);
-
       navigate("/matchResult", {
         state: {
           username,
           opponent: opponent.playerName,
           currRating,
+          language,
           mappedResult,
           totalTestCases,
           createdAt: result.createdAt,
@@ -85,6 +99,8 @@ const CodeArena = () => {
       socket.off("gameEnd");
     };
   }, [totalTestCases, username]);
+
+  if (!location.state) return null; 
 
   const runTests = () => {
     console.log("Running tests...");
@@ -101,22 +117,6 @@ const CodeArena = () => {
 
   return (
     <div className="leetcode-clone">
-      <div className="header-codeeditor">
-        <div className="action-buttons">
-          <Button
-            label="Run"
-            icon="pi pi-play"
-            className="p-button-sm p-button-outlined"
-            onClick={runTests}
-          />
-          <Button
-            label="Submit"
-            icon="pi pi-check"
-            className="p-button-sm p-button-success"
-            onClick={handleSubmit}
-          />
-        </div>
-      </div>
       <div className="info-display">
         <div className="meter-top">
           <div className="you-container">
@@ -125,7 +125,7 @@ const CodeArena = () => {
             <TestCaseYou casepassed={playerStats} totalCases={totalTestCases} />
           </div>
 
-          <Timer initialTime={300} />
+          <Timer initialTime={timeLeft} />
 
           <div className="op-container">
             <TestCaseOpp
@@ -166,6 +166,8 @@ const CodeArena = () => {
                 setCurrCode={setCurrCode}
                 language={language}
                 setLanguage={setLanguage}
+                handleSubmit={handleSubmit}
+                runTests={runTests}
               />
             </SplitterPanel>
             <SplitterPanel
@@ -173,7 +175,7 @@ const CodeArena = () => {
               size={30}
               minSize={20}
             >
-              <TestCaseWindow tests={question.test_cases} result={result} />
+              <TestCaseWindow tests={question.test_cases} result={result} errorMsg={errorMsg} />
             </SplitterPanel>
           </Splitter>
         </SplitterPanel>

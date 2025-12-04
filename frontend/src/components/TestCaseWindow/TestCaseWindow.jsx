@@ -1,19 +1,22 @@
 import "./TestCaseWindow.css";
 import { useEffect, useState, memo } from "react";
 
-const TestCaseWindow = ({ tests, result }) => {
-
+const TestCaseWindow = ({ tests, result, errorMsg }) => {
   const [testCases, setTestCases] = useState(null);
 
-  // Function to decide if a test case is correct or wrong
   const getTestCaseStatus = (index) => {
     if (!result) return "";
     if (result.resultStatus.resultStatus === true) {
       return "✔️";
     }
-    if (result.resultStatus.resultStatus === false && index <= result.resultStatus.mismatchedAt) {
+  if (result.resultStatus.resultStatus === false) {
+    if (index < result.resultStatus.mismatchedAt) {
+      return "✔️";
+    }
+    if (index === result.resultStatus.mismatchedAt) {
       return "❌";
     }
+  }
     return "";
   };
 
@@ -37,6 +40,12 @@ const TestCaseWindow = ({ tests, result }) => {
           </div>
         )}
       </div>
+
+      {errorMsg ? (
+        <div className="error-message">
+          <p>Error: {errorMsg}</p>
+        </div>
+      ) : null}
     </div>
   );
 };

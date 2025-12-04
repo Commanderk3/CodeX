@@ -1,0 +1,199 @@
+.match-history {
+  min-height: 100vh;
+  background-color: #0b0b0f; /* soft dark neutral */
+  color: #e5e7eb; /* neutral-200 */
+  padding: 2rem;
+}
+
+/* Header */
+.match-history-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.match-history-header h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #e2e8f0; /* gray-200 */
+}
+
+.stats-overview {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Stats card */
+.stat {
+  background-color: #111317; /* neutral dark surface */
+  border: 1px solid #1f2937; /* gray-800 */
+  border-radius: 0.75rem;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+  transition: all 0.2s ease;
+}
+
+.stat:hover {
+  background-color: #15181d;
+  transform: translateY(-2px);
+}
+
+.stat-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #60a5fa; /* blue-400 */
+  margin-bottom: 0.25rem;
+}
+
+.stat-label {
+  font-size: 0.8rem;
+  color: #9ca3af; /* gray-400 */
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Matches section */
+.matches-container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Empty state */
+.no-matches, .loading, .no-user {
+  text-align: center;
+  padding: 3rem 2rem;
+  background-color: #111317;
+  border: 1px solid #1f2937;
+  border-radius: 0.75rem;
+  color: #9ca3af;
+}
+
+/* Matches list */
+.matches-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* Match card */
+.match-card {
+  background-color: #111317;
+  border: 1px solid #1f2937;
+  border-radius: 0.75rem;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.25);
+  transition: all 0.2s ease;
+}
+
+.match-card:hover {
+  background-color: #15181d;
+  border-color: #2d3748;
+  transform: translateY(-2px);
+}
+
+/* Match details */
+.match-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.75rem;
+}
+
+.question-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.match-info {
+  display: flex;
+  justify-content: space-between;
+  color: #9ca3af;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Player stats */
+.match-stats {
+  display: flex;
+  justify-content: space-between;
+  border-top: 1px solid #1f2937;
+  padding-top: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.player-stats h4 {
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+}
+
+.player-stats p {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  margin: 0.15rem 0;
+}
+
+/* Result badges (neutral tone) */
+.result-badge {
+  padding: 0.3rem 0.9rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Result colors */
+.result-badge.victory {
+  background-color: #22c55e20; /* subtle green tint */
+  color: #22c55e;
+  border: 1px solid #22c55e40;
+}
+
+.result-badge.defeat {
+  background-color: #ef444420;
+  color: #ef4444;
+  border: 1px solid #ef444440;
+}
+
+.result-badge.draw {
+  background-color: #f59e0b20;
+  color: #f59e0b;
+  border: 1px solid #f59e0b40;
+}
+
+.result-badge.live {
+  background-color: #3b82f620;
+  color: #3b82f6;
+  border: 1px solid #3b82f640;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .match-history {
+    padding: 1rem;
+  }
+
+  .stats-overview {
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+  }
+
+  .match-card {
+    text-align: center;
+  }
+
+  .match-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .match-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

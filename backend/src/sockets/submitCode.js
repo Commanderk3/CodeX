@@ -3,7 +3,11 @@ const checkTestCases = require("../services/checkTestCases");
 const generateSubmissions = require("../services/generateSubmissions");
 const questions = require("../../question2.json");
 
-const { handlePlayerWin, getActiveRooms, updateTestCase } = require("../services/gameManager");
+const {
+  handlePlayerWin,
+  getActiveRooms,
+  updateTestCase,
+} = require("../services/gameManager");
 
 const getTemplateCode = questions[2].template;
 
@@ -49,19 +53,20 @@ exports.submitCode = (socket, io) => {
       );
       const tokenData = await codeRunnerService.submitBatch(submissions);
       const result = await codeRunnerService.getBatchSubmission(tokenData);
-      const resultStatus = await checkTestCases.checkTestCases(
+      const codeResult = checkTestCases.checkTestCases(
         result.submissions,
         questions[2].test_cases
       );
+      const testCasePassed = codeResult.mismatchedAt;
+      updateTestCase(roomId, playerName, testCasePassed);
 
-      // Update player's test case progress in the room
-      updateTestCase(roomId, playerName, resultStatus.mismatchedAt);
-
-      if (resultStatus.resultStatus) {
-        handlePlayerWin(roomId, io, playerName);
+      if (codeResult.resultStatus) {
+        handlePlayerWin(roomId, io);
       } else {
-        socket.emit("code-result", { resultStatus });
-        socket.to(roomId).emit("opponent-progress", { resultStatus });
+        socket.emit("code-result", { codeResult });
+        socket.to(roomId).emit("opponent-progress", {
+          mismatchedAt: codeResult.mismatchedAt,
+        });
       }
     } catch (err) {
       console.error(err);

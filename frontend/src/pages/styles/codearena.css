@@ -16,18 +16,6 @@
   backdrop-filter: blur(8px);
 }
 
-.action-buttons .p-button {
-  margin-left: 10px;
-  padding: 10px;;
-  border-radius: 8px;
-  font-weight: 600;
-  transition: transform 0.2s ease, background 0.3s ease;
-}
-
-.action-buttons .p-button:hover {
-  transform: translateY(-2px);
-}
-
 .info-display {
   margin: 0px auto;
   padding: 10px 18px;
