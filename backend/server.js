@@ -20,7 +20,7 @@ const submitCode = require("./src/sockets/submitCode");
 const roomActions = require("./src/sockets/roomSockets");
 
 // socketManager
-const { notifyDisconnection } = require("./src/services/roomManager")
+const { removePlayerFromRoom, getActiveSessions, validateUser } = require("./src/services/roomManager");
 
 const app = express();
 const server = http.createServer(app);
@@ -37,8 +37,8 @@ app.use(cors());
 app.use(express.json());
 
 mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 }).then(() => console.log("MongoDB connected"))
   .catch(err => console.log(err));
 
@@ -49,7 +49,7 @@ app.use("/api/roomlist", auth, roomRoutes);
 
 // Routes
 app.get("/", (req, res) => {
-    res.send("Hello player!");
+  res.send("Hello player!");
 })
 
 io.use((socket, next) => {
@@ -72,18 +72,30 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("New client connected ", socket.id);
+  const userId = socket.user.id;
+  console.log("New client connected", socket.id, userId);
+  if (!validateUser(socket)) {
+    return;
+  };
 
   matchMaking.matchMaking(socket, io);
   submitCode.submitCode(socket, io);
   roomActions.roomActions(socket, io);
 
   socket.on("disconnect", () => {
-    notifyDisconnection(socket.id);
-    console.log("Client disconnected:", socket.id);
+    const activeSessions = getActiveSessions();
+    const session = activeSessions.get(userId);
+    if (!session) return;
+    if (session.socketId === socket.id) {
+      console.log("1");
+      removePlayerFromRoom(userId, session.roomId, io);
+      activeSessions.delete(userId);
+    }
+    console.log("Client disconnected:", socket.id, "user:", userId);
   });
-})
+});
 
 server.listen(PORT, () => {
   console.log(`✅ Server running on http://localhost:${PORT}`);
 });
+
