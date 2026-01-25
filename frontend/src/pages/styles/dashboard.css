@@ -195,6 +195,11 @@
 }
 
 /* === ROOMS === */
+.room-list-header {
+  display: flex;
+  justify-content: space-between;
+}
+
 .room-card {
   background: #18181b;
   padding: 16px;
@@ -239,11 +244,6 @@
   padding: 8px 14px;
 }
 
-.room-join:hover:not(:disabled),
-.find-match:hover {
-  background: #2563eb;
-}
-
 /* Disabled Button */
 .room-join:disabled {
   background: #2d2d30;
@@ -251,16 +251,29 @@
   cursor: not-allowed;
 }
 
+.refresh-btn {
+  width: 30px;
+  height: 30px;
+  background-color: #2d2d30;
+  border: 1px solid #27272a;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.refresh-btn:hover {
+  border-color: #2563eb;
+}
+
+
 /* Secondary Button */
 .create-room {
   background: #111317;
   color: #e5e7eb;
   border: 1px solid #3b82f6;
   padding: 8px 14px;
-}
-
-.create-room:hover {
-  background: #18181b;
 }
 
 /* Action Buttons Layout */
@@ -274,9 +287,6 @@
   font-size: 16px;
 }
 
-.action-btn:hover {
-  transform: translateY(-2px);
-}
 
 /* === LOADER === */
 .loader {
@@ -308,3 +318,4 @@
     grid-template-columns: 1fr;
   }
 }
+

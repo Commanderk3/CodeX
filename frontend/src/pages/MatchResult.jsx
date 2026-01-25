@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import "./styles/matchresults.css";
 
+// make it dynamic. To handle rooms as well.
 export default function MatchResult() {
   const location = useLocation();
   const navigate = useNavigate();

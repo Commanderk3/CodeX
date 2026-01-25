@@ -18,6 +18,7 @@ import socket from "../socket";
 const CodeArena = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  
   const {
     username,
     avatar,
@@ -29,6 +30,7 @@ const CodeArena = () => {
     createdAt,
     expiresAt,
   } = location.state;
+
   const totalTestCases = question.test_cases.length;
   const [language, setLanguage] = useState("javascript");
   const [currCode, setCurrCode] = useState(question.boilerplate["javascript"]);
@@ -54,16 +56,21 @@ const CodeArena = () => {
     if (!location.state) return;
 
     socket.on("code-result", (data) => {
-      setResult(data);
+      const result = data.codeResult;     // FIX
+
+      setResult(result.resultStatus);
       console.log("code-result", data);
-      if (data.resultStatus.errorMsg) {
-        setErrorMsg(data.resultStatus.errorMsg);
+
+      if (result.errorMsg) {
+        setErrorMsg(result.errorMsg);
       } else {
         setErrorMsg(null);
       }
-      const passedCases = data.resultStatus.mismatchedAt || 0;
+
+      const passedCases = result.mismatchedAt || 0;
       setPlayerStats(passedCases);
     });
+
 
     socket.on("opponent-progress", (data) => {
       const passedCases = data.mismatchedAt || 0;
@@ -100,7 +107,7 @@ const CodeArena = () => {
     };
   }, [totalTestCases, username]);
 
-  if (!location.state) return null; 
+  if (!location.state) return null;
 
   const runTests = () => {
     console.log("Running tests...");

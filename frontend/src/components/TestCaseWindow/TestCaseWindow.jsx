@@ -1,15 +1,15 @@
 import "./TestCaseWindow.css";
-import { useEffect, useState, memo } from "react";
+import { useState } from "react";
 
 const TestCaseWindow = ({ tests, result, errorMsg }) => {
   const [testCases, setTestCases] = useState(null);
 
   const getTestCaseStatus = (index) => {
     if (!result) return "";
-    if (result.resultStatus.resultStatus === true) {
+    if (result.resultStatus === true) {
       return "✔️";
     }
-  if (result.resultStatus.resultStatus === false) {
+  if (result.resultStatus === false) {
     if (index < result.resultStatus.mismatchedAt) {
       return "✔️";
     }

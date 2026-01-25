@@ -1,0 +1,62 @@
+/* Reset and base styles */
+.leetcode-clone {
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.main-splitter {
+  height: 100% !important;
+  width: 100% !important;
+}
+
+.p-splitter-panel {
+  overflow: hidden !important;
+}
+
+/* Ensure primereact panels are visible */
+.p-splitter {
+  border: none !important;
+}
+
+.p-splitter-gutter {
+  background-color: #e5e7eb !important;
+}
+
+.p-splitter-gutter-handle {
+  background-color: #9ca3af !important;
+}
+
+.room-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  opacity: 0.9;
+}
+
+.room-name {
+  font-weight: 600;
+}
+
+.players-count {
+  background-color: rgba(255,255,255,0.2);
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+/* Ensure other panels have proper sizing */
+.problem-panel-container,
+.editor-testcase-container,
+.code-editor-container,
+.testcase-container {
+  overflow: auto !important;
+  height: 100% !important;
+}
+
+/* Fix for primereact splitter */
+.p-splitter-panel-nested {
+  overflow: hidden !important;
+}

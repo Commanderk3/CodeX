@@ -1,0 +1,102 @@
+.messages-container {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto !important;
+}
+
+.message {
+  background: #18181b;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid #27272a;
+  max-width: 80%;
+}
+.own-message {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: #3b82f6;
+  align-self: flex-end;
+}
+
+.message-user {
+  font-weight: 600;
+  color: #60a5fa;
+  font-size: 13px;
+}
+
+.message-text {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+.message-input-form {
+  flex-shrink: 0;
+  border-top: 1px solid #1f2937;
+  padding: 14px;
+}
+
+.input-container {
+  display: flex;
+  gap: 8px;
+}
+
+.message-input {
+  flex: 1;
+  background: #18181b;
+  border: 1px solid #27272a;
+  border-radius: 6px;
+  padding: 10px 12px;
+  color: #e5e7eb;
+}
+
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;           /* or a fixed height like 500px */
+  min-height: 0;          /* IMPORTANT for flex scrolling */
+}
+
+.send-btn {
+  background: #3b82f6;
+  color: #0b0b0f;
+  border: none;
+  border-radius: 6px;
+  padding: 0 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+.send-btn:hover {
+  background: #2563eb;
+}
+
+.chat-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;           /* or a fixed height like 500px */
+  min-height: 0;          /* IMPORTANT for flex scrolling */
+}
+
+/* Ensure the message container fills available space and can scroll */
+.messages-container {
+  flex: 1 1 auto;        /* Fill available space */
+  min-height: 0;         /* CRITICAL for flex children to scroll */
+  overflow-y: auto;      /* Enable vertical scrolling */
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+}
+
+/* Add this to ensure messages container doesn't grow infinitely */
+.messages-container > * {
+  flex-shrink: 0;        /* Prevent messages from shrinking */
+}
+
+.message-input-form {
+  flex-shrink: 0;        /* Prevent form from shrinking */
+  border-top: 1px solid #1f2937;
+  padding: 14px;
+}

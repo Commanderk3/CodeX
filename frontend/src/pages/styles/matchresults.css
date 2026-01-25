@@ -180,7 +180,7 @@ input:checked + .slider:before {
   color: #fafafa;
   transition: 0.3s;
 }
-.action-btn:hover {
+/* .action-btn:hover {
   background: #fafafa;
   color: #0a0a0a;
-}
+} */
