@@ -2,12 +2,13 @@ import { createContext, useContext, useEffect, useState } from "react";
 
 const ThemeContext = createContext();
 
+// daisyui themes
 const lightMode = "lofi";
 const darkMode = "sunset";
 
 export const ThemeProvider = ({ children }) => {
   const [isDark, setIsDark] = useState(
-    localStorage.getItem("theme") === lightMode
+    localStorage.getItem("theme") !== lightMode
   );
 
   if (isDark === undefined) {
@@ -17,7 +18,7 @@ export const ThemeProvider = ({ children }) => {
   useEffect(() => {
     document.documentElement.setAttribute(
       "data-theme",
-      isDark ? darkMode : lightMode
+      isDark ? darkMode : lightMode,
     );
     localStorage.setItem("theme", isDark ? darkMode : lightMode);
   }, [isDark]);
