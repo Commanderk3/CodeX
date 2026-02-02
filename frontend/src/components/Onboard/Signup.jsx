@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../../services/api";
-
-import "./signup.css";
+import { useSystemMessages } from "../../contexts/SystemMessageContext";
 
 const Signup = () => {
   const [selectedAvatar, setSelectedAvatar] = useState(0);
@@ -10,13 +9,17 @@ const Signup = () => {
   const [selectedLanguage, setSelectedLanguage] = useState("Python");
   const [email, setEmail] = useState("johndoe@gmail.com");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const avatars = ["😀", "😎", "🤖", "🦄", "🐱", "🐶", "🦊", "🐼"];
   const languages = ["JavaScript", "C++", "Python", "Java"];
   const navigate = useNavigate();
+  const { addMessage } = useSystemMessages();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const userData = {
         username,
@@ -27,112 +30,141 @@ const Signup = () => {
       };
 
       const { data } = await registerUser(userData);
-
       localStorage.setItem("token", data.token);
 
       navigate("/");
       window.location.reload();
-
     } catch (err) {
       console.error(err);
-      alert("Error during registration");
+      addMessage("error", err.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="content">
-      {/* Left panel */}
-      <div className="left-panel">
-        <div className="section-title">
-          <i className="fas fa-user-circle"></i>
-          Avatar & Nickname
-        </div>
+    <>
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Profile Section */}
+        <div className="card bg-base-200 p-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Left: Avatar Preview */}
+            <div className="space-y-4">
+              <div className="flex flex-col items-center">
+                <div className="avatar mb-6">
+                  <div className="avatar">{avatars[selectedAvatar]}</div>
+                </div>
 
-        {/* Avatar preview */}
-        <div className="avatar-preview">
-          <div className="preview-container">
-            <div className="avatar-display">{avatars[selectedAvatar]}</div>
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 mb-2">
+                    Click an emoji to select
+                  </p>
+                  <div className="flex flex-wrap justify-center gap-2">
+                    {avatars.map((avatar, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        className={`w-10 h-10 text-xl rounded-full flex items-center justify-center hover:bg-base-300 transition-colors ${
+                          selectedAvatar === index
+                            ? "bg-primary text-primary-content"
+                            : "bg-base-100"
+                        }`}
+                        onClick={() => setSelectedAvatar(index)}
+                      >
+                        {avatar}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Account Details */}
+            <div className="space-y-4">
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">Username</span>
+                </label>
+                <input
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  className="input input-bordered"
+                  placeholder="Enter your username"
+                  required
+                />
+              </div>
+
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">Email</span>
+                </label>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="input input-bordered"
+                  placeholder="Enter your email"
+                  required
+                />
+              </div>
+
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">Password</span>
+                </label>
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="input input-bordered"
+                  placeholder="Create a password"
+                  required
+                />
+              </div>
+
+              {/* Language Dropdown */}
+              <div className="form-control">
+                <label className="label">
+                  <span className="label-text font-medium">
+                    Preferred Language
+                  </span>
+                </label>
+                <select
+                  value={selectedLanguage}
+                  onChange={(e) => setSelectedLanguage(e.target.value)}
+                  className="select select-bordered w-full"
+                >
+                  {languages.map((lang) => (
+                    <option key={lang} value={lang}>
+                      {lang}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="input-group">
-          <label htmlFor="nickname">Username</label>
-          <input
-            type="text"
-            id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
+        {/* Submit Button */}
+        <div className="flex justify-center">
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg w-full md:w-1/2"
+            disabled={isLoading}
+          >
+            {isLoading ? (
+              <>
+                <span className="loading loading-spinner loading-sm"></span>
+                Creating Account...
+              </>
+            ) : (
+              "Create Account"
+            )}
+          </button>
         </div>
-
-        {/* Email input */}
-        <div className="input-group">
-          <label htmlFor="email">Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-
-        {/* Password input */}
-        <div className="input-group">
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-
-        <button className="btn btn-primary" onClick={handleSubmit}>
-          CONTINUE
-        </button>
-      </div>
-
-      {/* Right panel */}
-      <div className="right-panel">
-        <div className="section-title">
-          <i className="fas fa-palette"></i>
-          Choose Avatar
-        </div>
-
-        {/* Avatar selection */}
-        <div className="avatar-grid">
-          {avatars.map((avatar, index) => (
-            <div
-              key={index}
-              className={`avatar ${selectedAvatar === index ? "selected" : ""}`}
-              onClick={() => setSelectedAvatar(index)}
-            >
-              {avatar}
-            </div>
-          ))}
-        </div>
-
-        <div className="section-title">
-          <i className="fas fa-code"></i>
-          Choose Language
-        </div>
-
-        {/* Language selection */}
-        <div className="language-grid">
-          {languages.map((lang, index) => (
-            <div
-              key={index}
-              className={`language-option ${
-                selectedLanguage === lang ? "selected" : ""
-              }`}
-              onClick={() => setSelectedLanguage(lang)}
-            >
-              {lang}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
+      </form>
+    </>
   );
 };
 

@@ -1,18 +1,31 @@
+import socket from "../socket";
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useFindMatch } from "../hooks/findMatch";
+import { useLocation } from "react-router-dom";
+import { useGame } from "../contexts/GameContext";
+import { useUser } from "../contexts/UserContext";
 import Navbar from "../components/Navbar";
-import "./styles/matchresults.css";
 
-// make it dynamic. To handle rooms as well.
 export default function MatchResult() {
   const location = useLocation();
-  const navigate = useNavigate();
+  const { isFindingMatch, setIsFindingMatch } = useGame();
+
   const [isVictory, setIsVictory] = useState(null);
   const [userStats, setUserStats] = useState(null);
   const [opponentStats, setOpponentStats] = useState(null);
   const [rankChange, setRankChange] = useState(null);
 
-  // Extract data from location state
+  const { user, loading } = useUser();
+
+  const { findMatch } = useFindMatch({
+    user,
+    isFindingMatch,
+    setIsFindingMatch,
+  });
+
+  const navigate = useNavigate();
+
   const {
     username,
     opponent,
@@ -28,7 +41,6 @@ export default function MatchResult() {
       return;
     }
 
-    // Determine match outcome
     let outcome;
     if (mappedResult[username].draw === true) {
       outcome = "draw";
@@ -39,7 +51,6 @@ export default function MatchResult() {
     }
     setIsVictory(outcome);
 
-    // Calculate user stats
     const userTime = mappedResult[username].timeTaken;
     const userPassed = mappedResult[username].testCasePassed;
 
@@ -49,7 +60,6 @@ export default function MatchResult() {
       efficiency: calculateEfficiency(userPassed, totalTestCases, userTime),
     });
 
-    // Calculate opponent stats
     const opponentTime = mappedResult[opponent].timeTaken;
     const opponentPassed = mappedResult[opponent].testCasePassed;
 
@@ -60,7 +70,7 @@ export default function MatchResult() {
       efficiency: calculateEfficiency(
         opponentPassed,
         totalTestCases,
-        opponentTime
+        opponentTime,
       ),
     });
 
@@ -79,16 +89,40 @@ export default function MatchResult() {
     createdAt,
   ]);
 
-  // Helper function to calculate efficiency score
+  useEffect(() => {
+    if (!user) return;
+
+    const handleMatch = ({ roomId, players, question, expiresAt }) => {
+      setIsFindingMatch(false);
+
+      navigate("/codearena", {
+        state: {
+          username: user.username,
+          avatar: user.avatar,
+          currRating: user.rating,
+          lang: user.language,
+          roomId,
+          players,
+          question,
+          expiresAt,
+        },
+      });
+    };
+
+    socket.on("matchFound", handleMatch);
+    return () => socket.off("matchFound", handleMatch);
+  }, [user, navigate, setIsFindingMatch]);
+
   const calculateEfficiency = (passed, total, time) => {
     const accuracy = (passed / total) * 100;
-    const timeScore = Math.max(0, 100 - time); // Penalize longer times
+    const timeScore = Math.max(0, 100 - time);
     return Math.round((accuracy + timeScore) / 2);
   };
 
   // Navigation handlers
   const handleFindMatch = () => {
-    navigate("/find-match");
+    console.log("*");
+    findMatch();
   };
 
   const handleReMatch = () => {
@@ -100,8 +134,11 @@ export default function MatchResult() {
     return (
       <>
         <Navbar />
-        <div className="results-container">
-          <div className="loading">Loading match results...</div>
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+            <p className="mt-4">Loading results...</p>
+          </div>
         </div>
       </>
     );
@@ -110,159 +147,126 @@ export default function MatchResult() {
   return (
     <>
       <Navbar />
-      <div className="results-container">
-        {/* Match outcome section */}
-        <div className={`match-outcome ${isVictory}`}>
-          <div className="outcome-icon">
-            <i
-              className={
-                isVictory === "victory"
-                  ? "fas fa-trophy"
-                  : isVictory === "defeat"
-                  ? "fas fa-skull"
-                  : "fas fa-handshake"
-              }
-            ></i>
-          </div>
-          <h1 className="outcome-title">
-            {isVictory === "victory"
-              ? "VICTORY"
-              : isVictory === "defeat"
-              ? "DEFEAT"
-              : "DRAW"}
-          </h1>
-        </div>
-
-        {/* Player comparison */}
-        <div className="player-comparison">
+      <div className="max-h-screen bg-base-100 p-4">
+        <div className="max-w-2xl mx-auto space-y-6">
+          {/* Header */}
           <div
-            className={`player-card ${
-              isVictory === "victory"
-                ? "winner"
-                : isVictory === "defeat"
-                ? "loser"
-                : "draw"
-            }`}
+            className={`card ${isVictory === "victory" ? "bg-green-50 border-green-200" : isVictory === "defeat" ? "bg-red-50 border-red-200" : "bg-gray-50 border-gray-200"} border`}
           >
-            <div className="player-avatar">
-              <i className="fas fa-user"></i>
-            </div>
-            <h3 className="player-name">You</h3>
-            <p className="player-stats">
-              Time: {userStats.time} | Cases: {userStats.testCases}
-            </p>
-          </div>
-
-          <div className="vs-badge">VS</div>
-
-          <div
-            className={`player-card ${
-              isVictory === "victory"
-                ? "loser"
-                : isVictory === "defeat"
-                ? "winner"
-                : "draw"
-            }`}
-          >
-            <div className="player-avatar">
-              <i className="fas fa-robot"></i>
-            </div>
-            <h3 className="player-name">{opponentStats.name}</h3>
-            <p className="player-stats">
-              Time: {opponentStats.time} | Cases: {opponentStats.testCases}
-            </p>
-          </div>
-        </div>
-
-        {/* Stats grid */}
-        <div className="stats-container">
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-stopwatch"></i>
-            </div>
-            <div className="stat-title">Completion Time</div>
-            <div className="stat-value">{userStats.time}</div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-check-circle"></i>
-            </div>
-            <div className="stat-title">Test Cases Passed</div>
-            <div className="stat-value">{userStats.testCases}</div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-bolt"></i>
-            </div>
-            <div className="stat-title">Efficiency Score</div>
-            <div className="stat-value">{userStats.efficiency}</div>
-          </div>
-
-          <div className="stat-card">
-            <div className="stat-icon">
-              <i className="fas fa-chart-line"></i>
-            </div>
-            <div className="stat-title">Rating Change</div>
-            <div className="stat-value">
-              {rankChange?.value > 0
-                ? `+${rankChange.value}`
-                : rankChange?.value ?? 0}
-            </div>
-          </div>
-        </div>
-
-        {/* Rank meter */}
-        <div className="rank-meter">
-          <div className="meter-header">
-            <span>New Rating : {rankChange.new}</span>
-            <div
-              className={`rank-change ${
-                isVictory === "victory"
-                  ? "positive"
+            <div className="card-body p-6 text-center">
+              <h1
+                className={`text-2xl font-bold ${isVictory === "victory" ? "text-green-600" : isVictory === "defeat" ? "text-red-600" : "text-gray-600"}`}
+              >
+                {isVictory === "victory"
+                  ? "VICTORY"
                   : isVictory === "defeat"
-                  ? "negative"
-                  : "neutral"
-              }`}
-            >
-              <i
-                className={`fas fa-arrow-${
-                  isVictory === "victory"
-                    ? "up"
-                    : isVictory === "defeat"
-                    ? "down"
-                    : "right"
-                }`}
-              ></i>
-              <span>
-                {rankChange?.value > 0
+                    ? "DEFEAT"
+                    : "DRAW"}
+              </h1>
+              <p className="text-sm text-gray-500">
+                {createdAt ? new Date(createdAt).toLocaleDateString() : "Today"}
+              </p>
+            </div>
+          </div>
+
+          {/* Players */}
+          <div className="card bg-base-100 border">
+            <div className="card-body p-4">
+              <div className="flex items-center justify-between">
+                <div className="text-center">
+                  <div className="avatar placeholder">
+                    <div className="bg-primary text-primary-content rounded-full w-12 h-12">
+                      <span>👤</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 font-medium">{username}</div>
+                  <div className="text-sm text-gray-500">{userStats.time}m</div>
+                </div>
+
+                <div className="text-center">
+                  <div className="badge badge-outline p-2">VS</div>
+                </div>
+
+                <div className="text-center">
+                  <div className="avatar placeholder">
+                    <div className="bg-secondary text-secondary-content rounded-full w-12 h-12">
+                      <span>🤖</span>
+                    </div>
+                  </div>
+                  <div className="mt-2 font-medium">{opponentStats.name}</div>
+                  <div className="text-sm text-gray-500">
+                    {opponentStats.time}m
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Stats */}
+          <div className="grid grid-cols-4 gap-4">
+            <div className="stat bg-base-100 border rounded-box p-4">
+              <div className="stat-title text-sm">Time</div>
+              <div className="stat-value text-lg">{userStats.time}m</div>
+            </div>
+
+            <div className="stat bg-base-100 border rounded-box p-4">
+              <div className="stat-title text-sm">Test Cases</div>
+              <div className="stat-value text-lg">{userStats.testCases}</div>
+            </div>
+
+            <div className="stat bg-base-100 border rounded-box p-4">
+              <div className="stat-title text-sm">Efficiency</div>
+              <div className="stat-value text-lg">{userStats.efficiency}</div>
+            </div>
+
+            <div className="stat bg-base-100 border rounded-box p-4">
+              <div className="stat-title text-sm">Rating</div>
+              <div
+                className={`stat-value text-lg ${rankChange.value > 0 ? "text-green-600" : rankChange.value < 0 ? "text-red-600" : ""}`}
+              >
+                {rankChange.value > 0
                   ? `+${rankChange.value}`
-                  : rankChange?.value ?? 0}{" "}
-                RR
-              </span>
+                  : rankChange.value}
+              </div>
             </div>
           </div>
 
-          <div className="meter-visual">
-            <div
-              className={`meter-fill`}
-              style={{ width: `${rankChange.new / 10}%` }}
-            ></div>
+          {/* Rating Progress */}
+          <div className="card bg-base-100 border">
+            <div className="card-body p-4">
+              <div className="flex justify-between items-center mb-2">
+                <span className="font-medium">Rating Change</span>
+                <div
+                  className={`badge ${rankChange.value > 0 ? "badge-success" : rankChange.value < 0 ? "badge-error" : "badge-neutral"}`}
+                >
+                  {rankChange.current} → {rankChange.new}
+                </div>
+              </div>
+              <progress
+                className={`progress w-full ${rankChange.value > 0 ? "progress-success" : rankChange.value < 0 ? "progress-error" : "progress-neutral"}`}
+                value={rankChange.new}
+                max="1000"
+              ></progress>
+            </div>
           </div>
-        </div>
 
-        {/* Action buttons */}
-        <div className="action-buttons">
-          <button className="action-btn find-match" onClick={handleFindMatch}>
-            <i className="fas fa-search"></i> Find Another Match
-          </button>
-          <button
-            className="action-btn"
-            onClick={handleReMatch}
-          >
-            <i className="fas fa-home"></i> Play Again
-          </button>
+          {/* Actions */}
+          <div className="flex">
+            <button
+              onClick={handleFindMatch}
+              className="btn btn-primary flex-1"
+            >
+              {isFindingMatch? "Cancel" : "Find Match"}
+            </button>
+          </div>
+          {isFindingMatch && (
+            <div className="flex gap-10">
+              <span className="loading loading-dots loading-md text-primary"></span>
+              <p className="text-base-content mt-2">
+                Finding a match for you...
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </>

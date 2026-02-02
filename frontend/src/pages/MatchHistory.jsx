@@ -47,12 +47,13 @@ const MatchHistory = () => {
               </p>
             </div>
           ) : (
-            <div className="matches-list">
+            <div className="matches-list m-10 ml-50 mr-50">
               {user.matchHistory.map((match, index) => (
                 <MatchCard
                   key={index}
                   match={match}
                   username={user.username}
+                  lang={user.language}
                   avatar={user.avatar}
                   rating={user.rating}
                 />
