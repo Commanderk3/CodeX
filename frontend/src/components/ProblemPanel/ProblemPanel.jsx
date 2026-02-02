@@ -2,7 +2,7 @@ import "./ProblemPanel.css";
 
 const ProblemPanel = ({ question }) => {
   return (
-    <div className="problem-panel">
+    <div className="problem-panel bg-base-100">
       <div className="problem-header">
         <h2>
           {question.title}
