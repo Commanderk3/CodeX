@@ -55,4 +55,3 @@ matchHistory needs to be reversed. Also fix ndant live status matches
 
 - navigation fix
 
-- isLive fix in Match list

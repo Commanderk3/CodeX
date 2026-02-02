@@ -9,12 +9,11 @@ const CodeEditor = ({
   language,
   setLanguage,
   handleSubmit,
-  runTests,
 }) => {
   const { isDark } = useTheme();
   return (
     <div className="code-editor-container">
-      <div className="editor-toolbar flex flex-wrap justify-between items-center gap-2">
+      <div className="flex flex-wrap justify-between gap-2">
         {/* Language Dropdown */}
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-outline btn-sm">
@@ -39,18 +38,9 @@ const CodeEditor = ({
           </ul>
         </div>
 
-        {/* Actions */}
-        <div className="flex gap-2">
-          <button
-            className="btn btn-sm btn-outline btn-accent"
-            onClick={runTests}
-          >
-            Run
-          </button>
-          <button className="btn btn-sm btn-primary" onClick={handleSubmit}>
-            Submit
-          </button>
-        </div>
+        <button className="btn btn-sm btn-primary" onClick={handleSubmit}>
+          Submit
+        </button>
       </div>
 
       {/* Editor */}

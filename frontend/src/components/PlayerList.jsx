@@ -48,7 +48,7 @@ export default function PlayerList({ players, isReady, toggleReady }) {
           }`}
           onClick={toggleReady}
         >
-          {isReady ? "✅ Ready" : "Ready Up"}
+          {isReady ? "Ready" : "Ready Up"}
         </button>
       </div>
     </div>

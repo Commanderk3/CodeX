@@ -5,9 +5,9 @@ import { useSystemMessages } from "../../contexts/SystemMessageContext";
 
 const Signup = () => {
   const [selectedAvatar, setSelectedAvatar] = useState("frog");
-  const [username, setUsername] = useState("John Doe");
+  const [username, setUsername] = useState("");
   const [selectedLanguage, setSelectedLanguage] = useState("Python");
-  const [email, setEmail] = useState("johndoe@gmail.com");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -45,7 +45,7 @@ const Signup = () => {
         username,
         email,
         password,
-        avatar: avatars[selectedAvatar],
+        avatar: selectedAvatar,
         language: selectedLanguage,
       };
 

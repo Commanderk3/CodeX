@@ -29,6 +29,8 @@ const CodeArena = () => {
     expiresAt,
   } = location.state;
 
+  console.log("Q", question);
+
   const totalTestCases = question.test_cases.length;
   const [language, setLanguage] = useState(lang.toLowerCase() || "javascript");
   const [currCode, setCurrCode] = useState(
@@ -39,7 +41,6 @@ const CodeArena = () => {
 
   const opponent = players.find((p) => p.playerName !== username);
   const player = players.find((p) => p.playerName === username);
-  console.log(player, username);
 
   const [playerStats, setPlayerStats] = useState(player.testCasePassed);
   const [opponentStats, setOpponentStats] = useState(opponent.testCasePassed);

@@ -59,9 +59,11 @@ const TestCaseWindow = ({ tests, result, errorMsg }) => {
           <div className="card bg-base-100">
             <div className="card-body text-sm space-y-1">
               <p>
-                <span className="font-semibold">Input:</span>{" "}
-                {tests[selectedCase].input.x}
+                <span className="font-semibold">Input:</span>
               </p>
+              <pre className="bg-base-200 p-2 rounded text-xs overflow-x-auto">
+                {JSON.stringify(tests[selectedCase].input, null, 2)}
+              </pre>
               <p>
                 <span className="font-semibold">Expected Output:</span>{" "}
                 {tests[selectedCase].output.toString()}
