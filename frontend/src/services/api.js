@@ -18,7 +18,33 @@ const roomList = (token) =>
   API.get("/roomlist", {
     headers: {
       Authorization: `Bearer ${token}`,
-    }
+    },
   });
 
-export { registerUser, loginUser, userDetails, roomList };
+const leaderboardList = (token) =>
+  API.get("/leaderboard", {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+const updateProfile = (data, token) =>
+  API.post(
+    "/user/profile",
+    data,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+
+export {
+  registerUser,
+  loginUser,
+  userDetails,
+  roomList,
+  leaderboardList,
+  updateProfile,
+};

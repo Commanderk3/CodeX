@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useGame } from "../contexts/GameContext";
+import { useSystemMessages } from "../contexts/SystemMessageContext";
 import { roomList } from "../services/api";
-import "../pages/styles/dashboard.css";
 import socket from "../socket";
 
 export default function RoomList() {
@@ -68,16 +68,19 @@ export default function RoomList() {
   }, []);
 
   return (
-    <>
-      <div className="room-list-header">
-        <h2 className="section-title">Available Rooms</h2>
-        <div className="refresh-btn" onClick={handleRefresh}>
+    <div className="space-y-4">
+      {/* Header - Improved contrast */}
+      <div className="flex items-center justify-between">
+        <h2 className="text-xl font-bold text-base-content">Available Rooms</h2>
+
+        <button
+          className="btn btn-ghost btn-circle hover:bg-base-200"
+          onClick={handleRefresh}
+          title="Refresh"
+        >
           <svg
-            className="w-6 h-6 text-gray-800 dark:text-white"
-            aria-hidden="true"
+            className="w-5 h-5 text-base-content"
             xmlns="http://www.w3.org/2000/svg"
-            width="20"
-            height="20"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -87,7 +90,6 @@ export default function RoomList() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill="none"
             />
             <path
               d="M21 3v6h-6"
@@ -95,41 +97,66 @@ export default function RoomList() {
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill="none"
             />
           </svg>
-        </div>
+        </button>
       </div>
 
-      <div className="rooms-list">
-        {rooms.map((room) => (
-          <div key={room.roomId} className="room-card">
-            <div className="room-info">
-              <div>{room.roomName}</div>
-              <div className="room-details">
-                <span>
-                  <i className="fas fa-hashtag"></i> {room.roomId}
-                </span>
-                <span>
-                  <i className="fas fa-users"></i> {room.playerCount}/
-                  {room.maxPlayers}
-                </span>
-                <span>
-                  <i className="fas fa-signal"></i> {room.difficulty}
-                </span>
+      {/* List */}
+      <div className="overflow-y-auto max-h-100 pr-2">
+        <div className="space-y-3">
+          {rooms.length === 0 && (
+            <div className="alert alert-info bg-info/10 border-info/20">
+              <span className="text-base-content">
+                No rooms available right now
+              </span>
+            </div>
+          )}
+
+          {rooms.map((room) => (
+            <div
+              key={room.roomId}
+              className="card bg-base-200 shadow-sm border border-base-300"
+            >
+              <div className="card-body py-4">
+                <div className="flex items-center justify-between gap-4">
+                  {/* Room info - Improved contrast */}
+                  <div className="space-y-1">
+                    <h3 className="font-semibold text-base-content">
+                      {room.roomName}
+                    </h3>
+
+                    <div className="flex gap-2 text-sm">
+                      <span className="badge badge-outline border-base-300 text-base-content/80">
+                        #{room.roomId}
+                      </span>
+                      <span className="badge bg-info/10 border-info/20 text-base-content">
+                        👥 {room.playerCount}/{room.maxPlayers}
+                      </span>
+                      <span className="badge bg-warning/10 border-warning/20 text-base-content">
+                        ⚡ {room.difficulty}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Action */}
+                  <button
+                    className={`btn btn-sm ${
+                      room.playerCount >= room.maxPlayers
+                        ? "btn-disabled bg-base-200 text-base-content/50"
+                        : "btn-primary"
+                    }`}
+                    disabled={room.playerCount >= room.maxPlayers}
+                    onClick={() => reqJoinRoom(room.roomId)}
+                  >
+                    {room.playerCount >= room.maxPlayers ? "Full" : "Join"}
+                  </button>
+                </div>
               </div>
             </div>
-
-            <button
-              className="room-join"
-              disabled={room.playerCount >= room.maxPlayers}
-              onClick={() => reqJoinRoom(room.roomId)}
-            >
-              {room.playerCount >= room.maxPlayers ? "Full" : "Join"}
-            </button>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
-    </>
+    </div>
   );
 }

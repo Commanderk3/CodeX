@@ -4,7 +4,7 @@ import { useGame } from "../contexts/GameContext";
 import { useUser } from "../contexts/UserContext";
 import Chat from "../components/ChatWindow/Chat";
 import socket from "../socket";
-import "./styles/lobby.css";
+
 import PlayerList from "../components/PlayerList";
 
 export default function Lobby() {
@@ -16,20 +16,14 @@ export default function Lobby() {
 
   const gameStartedRef = useRef(false);
 
-  /* ---------- Prevent browser back button ---------- */
   useEffect(() => {
     // Block browser back button
     const blockBackButton = (e) => {
-      // Show confirmation
       e.preventDefault();
       e.returnValue = "Are you sure you want to leave?";
 
       if (window.confirm("Please use the 'Leave' button to exit the lobby.")) {
-        socket.emit("leave-room", {
-          roomId: room.roomId,
-          playerName: user.username
-        });
-        leaveLobby();
+        leaveLobby(room.roomId, user.username);
         navigate("/", { replace: true });
       }
     };
@@ -84,25 +78,20 @@ export default function Lobby() {
     socket.emit("set-ready", {
       roomId: room.roomId,
       isReady: newReadyState,
-      player: user.username,
     });
   };
 
   const handleLeave = () => {
-    socket.emit("leave-room", {
-      roomId: room.roomId,
-      playerName: user.username
-    });
-    leaveLobby();
+    leaveLobby(room.roomId, user.username);
     navigate("/", { replace: true });
   };
 
   const handleStartGame = () => {
     socket.emit("start-game", {
       roomId: room.roomId,
-      adminName: user.username
-    })
-  }
+      adminName: user.username,
+    });
+  };
 
   const copyRoomCode = () => {
     navigator.clipboard.writeText(room.roomId);
@@ -111,47 +100,50 @@ export default function Lobby() {
   if (!room) return null;
 
   return (
-    <div className="lobby-container">
-      <header className="lobby-header">
-        <h1 className="lobby-title">⚡ Game Lobby</h1>
-        <div className="room-info">
-          <div className="room-name">{room.roomName}</div>
-          <div className="room-stats">
-            <span className="room-code" onClick={copyRoomCode}>
+    <div className="lobby-container bg-base-100 min-h-screen p-5 md:p-8 font-sans flex flex-col">
+      <header className="lobby-header flex justify-between items-center pb-3 border-b border-base-300 mb-6">
+        <h1 className="lobby-title text-2xl md:text-3xl font-bold text-primary">
+          ⚡ Game Lobby
+        </h1>
+        <div className="room-info flex flex-col md:flex-row items-start md:items-center gap-3 md:gap-4 bg-base-200 p-4 rounded-box">
+          <div className="room-name font-semibold text-base-content">
+            {room.roomName}
+          </div>
+          <div className="room-stats flex items-center gap-3">
+            <span
+              className="room-code font-mono bg-base-300 px-3 py-2 rounded-btn text-base-content cursor-pointer hover:bg-base-300/80"
+              onClick={copyRoomCode}
+            >
               Code: <strong>{room.roomId}</strong>
             </span>
-            <span className="player-count">
+            <span className="player-count bg-base-300 px-3 py-2 rounded-btn font-bold text-base-content">
               {players.length} / {room.maxPlayers}
             </span>
           </div>
-          <div className="room-status">
+          <div className="room-status text-base-content/80 italic">
             {players.length < room.maxPlayers
               ? "Waiting for players..."
               : "All players joined!"}
           </div>
-          <button className="leave-btn" onClick={handleLeave}>
+          <button
+            className="leave-btn btn btn-error btn-sm md:btn-md text-error-content"
+            onClick={handleLeave}
+          >
             Leave Room
           </button>
         </div>
       </header>
 
-      <div className="lobby-grid">
+      <div className="lobby-grid grid grid-cols-1 lg:grid-cols-3 gap-5 flex-1">
+        {/* PlayerList component will be in first column */}
         <PlayerList
           players={players}
           isReady={isReady}
           toggleReady={toggleReady}
         />
-        <Chat roomId={room.roomId} user={user} />
 
-        {/* QUICK ACTIONS */}
-        <div className="card actions-card">
-          <div className="card-header">Quick Actions</div>
-          <div className="card-content quick-actions">
-            <button className="action-btn">Invite</button>
-            <button className="action-btn">Settings</button>
-            <button className="action-btn" onClick={handleStartGame}>Start Game</button>
-          </div>
-        </div>
+        {/* Chat component will be in middle column */}
+        <Chat roomId={room.roomId} user={user} page={"lobby"} />
       </div>
     </div>
   );

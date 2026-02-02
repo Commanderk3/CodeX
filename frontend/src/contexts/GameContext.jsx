@@ -10,10 +10,9 @@ export function GameProvider({ children }) {
   const [players, setPlayers] = useState([]);
   const [question, setQuestion] = useState();
 
-
-  const leaveLobby = useCallback(() => {
+  const leaveLobby = useCallback((roomId, username) => {
     if (room?.roomId) {
-      socket.emit("leave-room", { roomId: room.roomId });
+      socket.emit("leave-room", { roomId: roomId,  playerName: username });
       setRoom(null);
       socket.disconnect();
     }
@@ -40,8 +39,7 @@ export function GameProvider({ children }) {
         players,
         setPlayers,
         question,
-        setQuestion,
-        setPlayers
+        setQuestion
       }}
     >
       {children}

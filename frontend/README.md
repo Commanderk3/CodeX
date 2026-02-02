@@ -37,24 +37,14 @@ function search(nums, target) {
 ```
 Todo:
 
-Make the styles bg color of page and card contrast look like : [behance](https://www.behance.net/gallery/179685261/Code-Battle-UIUX)
-Post Match Results
-Emit player activity
-
-We are not storing whenever `activeRooms` updates as it would be lots of read/write opperation per minute. Instead we are saving when:
-- match is found. Saving status as 'live'. So that user can re-connect if they disconnect.
-- when user disconnects, save their progress (testCase passed).
-
-When user rejoins and its username and roomId exists in activeRooms, it will emit back the current state of the game that the user missed. This includes time, opp-progress, player last progress. 
-
-Display error message in testcasewindow
 
 after refresh in codearena, it should fall
-store max of testcases (best one)
-rejoin is not displaying opponent's avatar and test case passes ✅
 matchHistory needs to be reversed. Also fix ndant live status matches
-when a player wins, it is giving absurd rating change, null/3 test case passed
+
 
 - add a search bar to search rooms
 
 **USE PROPER NAMING CONVENTION: handler**
+
+- show live animation in match history tab if a match is ongoing
+- dont forget to send less test cases to client. Ig we have to add a total test case field.
