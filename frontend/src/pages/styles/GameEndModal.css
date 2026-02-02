@@ -23,17 +23,6 @@
   }
 }
 
-.game-end-modal {
-  background-color: #1a1a2e;
-  padding: 2rem 3rem;
-  border-radius: 15px;
-  max-width: 90%;
-  max-height: 90%;
-  overflow: auto;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-  border: 2px solid #4cc9f0;
-  animation: slideUp 0.4s ease-out;
-}
 
 @keyframes slideUp {
   from {
@@ -152,12 +141,6 @@
   margin-bottom: 0.5rem;
 }
 
-.player-name {
-  font-size: 1.3rem;
-  font-weight: bold;
-  color: #ffffff;
-}
-
 .current-user .player-name {
   color: #4cc9f0;
 }
@@ -256,26 +239,3 @@
   text-align: center;
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .game-end-modal {
-    padding: 1.5rem;
-    min-width: 95%;
-  }
-  
-  .game-end-title {
-    font-size: 2rem;
-  }
-  
-  .leaderboard-container {
-    min-width: 300px;
-  }
-  
-  .player-name {
-    font-size: 1.1rem;
-  }
-  
-  .test-count {
-    font-size: 1rem;
-  }
-}

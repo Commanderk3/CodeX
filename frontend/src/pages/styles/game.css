@@ -52,7 +52,7 @@
 .editor-testcase-container,
 .code-editor-container,
 .testcase-container {
-  overflow: auto !important;
+  
   height: 100% !important;
 }
 

@@ -171,15 +171,7 @@ input:checked + .slider:before {
   gap: 1rem;
   justify-content: center;
 }
-.action-btn {
-  padding: 0.75rem 1.25rem;
-  border-radius: 0.75rem;
-  font-weight: 500;
-  border: 1px solid #27272a;
-  background: transparent;
-  color: #fafafa;
-  transition: 0.3s;
-}
+
 /* .action-btn:hover {
   background: #fafafa;
   color: #0a0a0a;
