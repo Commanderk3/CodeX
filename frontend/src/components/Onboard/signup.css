@@ -112,3 +112,16 @@
   display: flex;
   gap: 24px;
 }
+
+.login-content {
+  display: flex;
+  justify-content: center;
+  color: #000000;
+}
+
+.login-panel {
+  background-color: #1a1a1a;
+  width: 500px;
+  padding: 20px;
+  border-radius: 12px;
+}

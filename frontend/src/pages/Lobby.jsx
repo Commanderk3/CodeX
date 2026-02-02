@@ -1,246 +1,155 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useGame } from "../contexts/GameContext";
+import { useUser } from "../contexts/UserContext";
+import Chat from "../components/ChatWindow/Chat";
 import socket from "../socket";
 import "./styles/lobby.css";
+import PlayerList from "../components/PlayerList";
 
 export default function Lobby() {
-  const location = useLocation();
   const navigate = useNavigate();
-  /*
-  roomId,
-  roomName: String,
-  difficulty: String,
-  maxPlayers: String,
-  players: [
-      {
-        playerName: String,
-        avatar: String,
-        rating: int,
-        isAdmin: bool,
-        isReady: bool,
-      },
-    ],
- */
+  const { room, players, leaveLobby, setPlayers, setQuestion } = useGame();
+  const { user } = useUser();
 
-  const { roomId, roomName, difficulty, maxPlayers, players, user } =
-    location.state || {};
-
-  const [currPlayers, setCurrPlayers] = useState(players || []);
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState("");
-  const [countdown, setCountdown] = useState(null);
   const [isReady, setIsReady] = useState(false);
-  const messagesEndRef = useRef(null);
 
-  const roomConfig = {
-    roomName,
-    roomId,
-    players,
-    maxPlayers,
-    difficulty,
-  };
+  const gameStartedRef = useRef(false);
 
+  /* ---------- Prevent browser back button ---------- */
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    // Block browser back button
+    const blockBackButton = (e) => {
+      // Show confirmation
+      e.preventDefault();
+      e.returnValue = "Are you sure you want to leave?";
 
-  useEffect(() => {
-    if (currPlayers.length >= 2 && currPlayers.every((p) => p.isReady)) {
-      setCountdown(5);
-      const timer = setInterval(() => {
-        setCountdown((prev) => {
-          if (prev <= 1) {
-            clearInterval(timer);
-            console.log("✅ Starting game!");
-            // navigate("/game", { state: { roomId } });
-            return null;
-          }
-          return prev - 1;
+      if (window.confirm("Please use the 'Leave' button to exit the lobby.")) {
+        socket.emit("leave-room", {
+          roomId: room.roomId,
+          playerName: user.username
         });
-      }, 1000);
-
-      return () => clearInterval(timer);
-    }
-  }, [currPlayers]);
-
-  useEffect(() => {
-    // new player joined
-    const updatePlayerState = ({ newPlayer, players }) => {
-      //notify(`${newPlayer} has joined the room!`);
-      console.log(`${newPlayer} has joined the room!`);
-      setCurrPlayers(players);
+        leaveLobby();
+        navigate("/", { replace: true });
+      }
     };
 
-    const updatePlayerReady = ({ players }) => {
-      setCurrPlayers(players);
-    };
+    // Block page refresh/close
+    window.addEventListener("beforeunload", blockBackButton);
 
-    const updateChatMessage = ({ sender, message }) => {
-      const msg = {
-        id: Date.now() + Math.random(),
-        user: sender,
-        text: message,
-      };
-      console.log(msg);
-      setMessages((prev) => [...prev, msg]);
-    };
+    // Block browser back/forward
+    window.history.pushState(null, "", window.location.pathname);
+    window.addEventListener("popstate", blockBackButton);
 
-    socket.on("broadcast-msg", updateChatMessage);
-    socket.on("player-ready", updatePlayerReady);
-    socket.on("newPlayerJoined", updatePlayerState);
     return () => {
-      socket.off("broadcast-msg", updateChatMessage);
-      socket.off("player-ready", updatePlayerReady);
-      socket.off("newPlayerJoined", updatePlayerState);
+      window.removeEventListener("beforeunload", blockBackButton);
+      window.removeEventListener("popstate", blockBackButton);
     };
-  }, []);
+  }, [room, user, leaveLobby, navigate]);
 
-  const sendMessage = (e) => {
-    e.preventDefault();
-    if (!newMessage.trim()) return;
+  /* ---------- Check if user has a room ---------- */
+  useEffect(() => {
+    if (!room) {
+      navigate("/", { replace: true });
+    }
+  }, [room, navigate]);
 
-    const msg = {
-      id: Date.now() + Math.random(),
-      user: "You",
-      text: newMessage,
+  /* ---------- Socket listeners ---------- */
+  useEffect(() => {
+    const updatePlayers = ({ players }) => setPlayers(players);
+
+    const handleGameStarted = ({ players, question }) => {
+      if (gameStartedRef.current) return;
+      gameStartedRef.current = true;
+      setPlayers(players);
+      setQuestion(question);
+      navigate("/game");
     };
 
-    setMessages((prev) => [...prev, msg]);
-    console.log(newMessage);
-    socket.emit("send-msg", { roomId, msg: newMessage, player: user.username });
-    setNewMessage("");
-  };
+    socket.on("newPlayerJoined", updatePlayers);
+    socket.on("player-ready", updatePlayers);
+    socket.on("question-delivered", handleGameStarted);
 
+    return () => {
+      socket.off("newPlayerJoined", updatePlayers);
+      socket.off("player-ready", updatePlayers);
+      socket.off("question-delivered", handleGameStarted);
+    };
+  }, [room, navigate, setPlayers, setQuestion]);
+
+  /* ---------- Actions ---------- */
   const toggleReady = () => {
-    setIsReady((prev) => !prev);
+    const newReadyState = !isReady;
+    setIsReady(newReadyState);
     socket.emit("set-ready", {
-      roomId,
-      isReady: !isReady,
+      roomId: room.roomId,
+      isReady: newReadyState,
       player: user.username,
     });
   };
 
-  const copyRoomCode = () => {
-    navigator.clipboard.writeText(roomConfig.roomId);
-    console.log("Room code copied!");
+  const handleLeave = () => {
+    socket.emit("leave-room", {
+      roomId: room.roomId,
+      playerName: user.username
+    });
+    leaveLobby();
+    navigate("/", { replace: true });
   };
 
-  const leaveLobby = () => {
-    if (window.confirm("Leave the lobby?")) {
-      console.log("Leaving...");
-      navigate("/");
-    }
+  const handleStartGame = () => {
+    socket.emit("start-game", {
+      roomId: room.roomId,
+      adminName: user.username
+    })
+  }
+
+  const copyRoomCode = () => {
+    navigator.clipboard.writeText(room.roomId);
   };
+
+  if (!room) return null;
 
   return (
     <div className="lobby-container">
-      {/* HEADER */}
       <header className="lobby-header">
         <h1 className="lobby-title">⚡ Game Lobby</h1>
-
         <div className="room-info">
-          <div className="room-name">{roomConfig.roomName}</div>
-
+          <div className="room-name">{room.roomName}</div>
           <div className="room-stats">
             <span className="room-code" onClick={copyRoomCode}>
-              Code: <strong>{roomConfig.roomId}</strong>
+              Code: <strong>{room.roomId}</strong>
             </span>
             <span className="player-count">
-              {currPlayers.length} / {roomConfig.maxPlayers}
+              {players.length} / {room.maxPlayers}
             </span>
           </div>
-
           <div className="room-status">
-            {currPlayers.length < roomConfig.maxPlayers
-              ? "Waiting for players to join..."
+            {players.length < room.maxPlayers
+              ? "Waiting for players..."
               : "All players joined!"}
           </div>
-
-          <button className="leave-btn" onClick={leaveLobby}>
-            Leave
+          <button className="leave-btn" onClick={handleLeave}>
+            Leave Room
           </button>
         </div>
       </header>
 
-      {/* MAIN GRID */}
       <div className="lobby-grid">
-        {/* LEFT: PLAYERS */}
-        <div className="card players-card">
-          <div className="card-header">
-            Players {countdown !== null && ` • Starting in ${countdown}s`}
-          </div>
+        <PlayerList
+          players={players}
+          isReady={isReady}
+          toggleReady={toggleReady}
+        />
+        <Chat roomId={room.roomId} user={user} />
 
-          <div className="card-content players-list">
-            {currPlayers.map((p, index) => (
-              <div
-                key={index}
-                className={`player-item ${p.isReady ? "ready" : ""}`}
-              >
-                <div className="player-avatar">
-                  {p.avatar ? p.avatar : p.playerName}
-                </div>
-                <div className="player-info">
-                  <div className="player-name">
-                    {p.playerName} {p.isAdmin && "👑"}
-                  </div>
-                  <div
-                    className={`player-status ${
-                      p.isReady ? "status-ready" : "status-waiting"
-                    }`}
-                  >
-                    {p.isReady ? "Ready" : "Waiting"}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <button
-            className={`ready-btn ${isReady ? "ready" : "not-ready"}`}
-            onClick={toggleReady}
-          >
-            {isReady ? "✅ Ready" : "Ready Up"}
-          </button>
-        </div>
-
-        {/* CENTER: CHAT */}
-        <div className="card chat-card">
-          <div className="card-header">Lobby Chat</div>
-
-          <div className="messages-container">
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={`message ${msg.user === "You" ? "own-message" : ""}`}
-              >
-                <div className="message-user">{msg.user}</div>
-                <div className="message-text">{msg.text}</div>
-              </div>
-            ))}
-            <div ref={messagesEndRef} />
-          </div>
-
-          <form onSubmit={sendMessage} className="message-input-form">
-            <div className="input-container">
-              <input
-                type="text"
-                className="message-input"
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
-              />
-              <button className="send-btn">Send</button>
-            </div>
-          </form>
-        </div>
-
-        {/* RIGHT: QUICK ACTIONS */}
+        {/* QUICK ACTIONS */}
         <div className="card actions-card">
           <div className="card-header">Quick Actions</div>
           <div className="card-content quick-actions">
             <button className="action-btn">Invite</button>
             <button className="action-btn">Settings</button>
-            <button className="action-btn">Start Game</button>
+            <button className="action-btn" onClick={handleStartGame}>Start Game</button>
           </div>
         </div>
       </div>

@@ -1,27 +1,30 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
+import { useGame } from "../contexts/GameContext";
+
 import Navbar from "../components/Navbar";
 import CreateRoom from "../components/CreateRoom/CreateRoom";
-import "./styles/dashboard.css";
-import socket from "../socket";
 import RoomList from "../components/RoomList";
+import "./styles/dashboard.css";
+import TestButton from "../components/TestButton";
+import socket from "../socket";
 
 export default function Dashboard() {
   const { user, loading } = useUser();
-  const [room, setRoom] = useState(null);
+  const { isFindingMatch, setIsFindingMatch } = useGame();
   const [winRate, setWinRate] = useState(0);
-  const [isFindingMatch, setIsFindingMatch] = useState(false);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
 
   const navigate = useNavigate();
 
   const calculateWinRate = (matches) => {
     if (!matches || matches.length === 0) return 0;
-    const wins = matches.filter((match) => match.result === "victory").length;
+    const wins = matches.filter(m => m.result === "victory").length;
     return Math.round((wins / matches.length) * 100);
   };
 
+  /* ------------------ socket: match found ------------------ */
   useEffect(() => {
     if (!user) return;
 
@@ -34,9 +37,9 @@ export default function Dashboard() {
       createdAt,
       expiresAt,
     }) => {
-      setRoom(roomId);
       setIsFindingMatch(false);
-      navigate("./CodeArena", {
+
+      navigate("/codearena", {
         state: {
           username: user.username,
           avatar: user.avatar,
@@ -52,33 +55,23 @@ export default function Dashboard() {
     };
 
     socket.on("matchFound", handleMatch);
+    return () => socket.off("matchFound", handleMatch);
+  }, [user, navigate, setIsFindingMatch]);
 
-    return () => {
-      socket.off("matchFound", handleMatch);
-    };
-  }, [user, navigate]);
-
-  // Find Match
+  /* ------------------ Find Match ------------------ */
   const findMatch = () => {
+    if (!user) return;
+
     if (isFindingMatch) {
       setIsFindingMatch(false);
-      if (socket.connected) {
-        socket.emit("cancel-match", {
-          playerName: user.username,
-        });
-      }
-      return;
-    }
-
-    if (!user) {
-      console.log("User not loaded yet");
+      socket.emit("cancel-match", { playerName: user.username });
       return;
     }
 
     setIsFindingMatch(true);
-    if (!socket.connected) {
-      socket.connect();
-    }
+
+    if (!socket.connected) socket.connect();
+
     socket.emit("find-match", {
       playerName: user.username,
       avatar: user.avatar,
@@ -86,11 +79,12 @@ export default function Dashboard() {
     });
   };
 
-  // Room Creation
-  const createRoom = () => {
-    setShowCreateRoom(!showCreateRoom);
+  /* ------------------ Create Room ------------------ */
+  const toggleCreateRoom = () => {
+    setShowCreateRoom(prev => !prev);
   };
 
+  /* ------------------ Guards ------------------ */
   if (loading) {
     return (
       <>
@@ -104,30 +98,26 @@ export default function Dashboard() {
 
   if (!user) {
     navigate("/signup");
-    return (
-      <>
-        <Navbar />
-        <div className="dashboard-container">
-          <div className="login-prompt">
-            <p>Please log in to access the dashboard</p>
-          </div>
-        </div>
-      </>
-    );
+    return null;
   }
 
+  /* ------------------ Render ------------------ */
   return (
     <>
       {showCreateRoom && (
         <CreateRoom
           showCreateRoom={showCreateRoom}
           setShowCreateRoom={setShowCreateRoom}
+          /* CreateRoom will navigate to /lobby itself */
         />
       )}
+
       <Navbar />
+
       <div className="dashboard-container">
         <div className="dashboard-content">
-          {/* User Profile Section */}
+
+          {/* User Profile */}
           <section className="section user-profile">
             <div className="profile-header">
               <div className="avatar">{user.avatar}</div>
@@ -154,53 +144,25 @@ export default function Dashboard() {
                 <div className="detail-value">{winRate}%</div>
               </div>
             </div>
-
-            {/* Past Matches Section */}
-            <div className="past-matches">
-              <h3 className="past-matches-title">Past Matches</h3>
-              {user.matchHistory.length === 0 ? (
-                <p>No matches found</p>
-              ) : (
-                <ul className="matches-list two-columns">
-                  {user.matchHistory.slice(0, 2).map((match, index) => (
-                    <li
-                      key={index}
-                      className={`match-item ${match.result.toLowerCase()}`}
-                    >
-                      <span className="match-opponent">
-                        {match.opponents.map((op) => op.playerName).join(", ")}
-                      </span>
-                      <span className="match-result">
-                        {match.result.toUpperCase()}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
           </section>
 
-          {/* Available Rooms Section */}
+          {/* Rooms */}
           <section className="section available-rooms">
-            <h2 className="section-title">
-              <i className="fas fa-door-open"></i> Available Rooms
-            </h2>
-
             <RoomList />
           </section>
 
-          {/* Action Buttons Section */}
+          {/* Actions */}
           <section className="section action-buttons">
             <button className="action-btn find-match" onClick={findMatch}>
               {isFindingMatch ? "Cancel" : "Find Match"}
             </button>
 
-            <button className="action-btn create-room" onClick={createRoom}>
+            <button className="action-btn create-room" onClick={toggleCreateRoom}>
               Create a Room
             </button>
           </section>
 
-          {/* Matching Indicator */}
+          {/* Match Loader */}
           {isFindingMatch && (
             <section className="section matching-indicator active">
               <div className="loader"></div>
@@ -208,12 +170,6 @@ export default function Dashboard() {
             </section>
           )}
 
-          {/* Display room info when matched */}
-          {room && (
-            <div className="matched-room">
-              <h3>Matched in room: {room}</h3>
-            </div>
-          )}
         </div>
       </div>
     </>

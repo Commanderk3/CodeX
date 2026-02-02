@@ -1,0 +1,138 @@
+/* PlayerProgress.css */
+.leaderboard-container {
+  background-color: #1a1a1a;
+  border-radius: 8px;
+  padding: 12px;
+  color: white;
+  height: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.leaderboard-header {
+  margin-bottom: 15px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #2d2d2d;
+}
+
+.players-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Scrollbar styling */
+.players-list::-webkit-scrollbar {
+  width: 4px;
+}
+
+.players-list::-webkit-scrollbar-track {
+  background: #2d2d2d;
+  border-radius: 2px;
+}
+
+.players-list::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 2px;
+}
+
+.players-list::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+.player-row {
+  display: flex;
+  align-items: center;
+  background-color: #2a2a2a;
+  padding: 5px;
+  border-radius: 2px;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease;
+}
+
+.player-row:hover {
+  background-color: #333;
+}
+
+.player-row.current-user {
+  background-color: rgba(99, 102, 241, 0.15);
+  border-color: rgba(99, 102, 241, 0.3);
+}
+
+.player-rank {
+  width: 24px;
+  margin-right: 8px;
+}
+
+.rank-number {
+  font-size: 14px;
+  font-weight: 500;
+  color: #d1d5db;
+}
+
+.player-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 12px;
+  margin-right: 12px;
+}
+
+.player-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.player-name-container {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.player-name {
+  font-weight: 500;
+  font-size: 7px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.current-user-indicator {
+  color: #6366f1;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.player-progress-bar-container {
+  width: 100%;
+}
+
+.progress-bar-background {
+  width: 100%;
+  height: 4px;
+  background-color: #374151;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
+.player-percentage {
+  width: 44px;
+  margin-left: 8px;
+}

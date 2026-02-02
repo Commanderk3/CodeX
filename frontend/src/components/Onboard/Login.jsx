@@ -26,12 +26,10 @@ const Login = () => {
     }
   };
 
-
   return (
-    <div className="content">
+    <div className="login-content">
       {/* Left panel */}
-      <div className="left-panel">
-
+      <div className="login-panel">
 
         {/* Email input */}
         <div className="input-group">
