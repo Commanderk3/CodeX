@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
 export default function PlayerList({ players, isReady, toggleReady }) {
+  const getAvatarSrc = (name) =>
+    new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
+
   return (
     <div className="card players-card bg-base-100 border border-base-300 shadow-lg">
       <div className="card-header border-b border-base-300 p-4 text-primary font-semibold">
@@ -16,9 +18,11 @@ export default function PlayerList({ players, isReady, toggleReady }) {
                 : "border-base-300 bg-base-100 hover:bg-base-200"
             }`}
           >
-            <div className="player-avatar w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center">
-              {p.avatar || p.playerName.charAt(0)}
-            </div>
+            <img
+              src={getAvatarSrc(p.avatar || "sadcat")}
+              alt={p.avatar || "sadcat"}
+              className="w-10 h-10 rounded-full object-contain"
+            />
             <div className="player-info flex-1">
               <div className="player-name font-medium text-base-content">
                 {p.playerName} {p.isAdmin && "👑"}

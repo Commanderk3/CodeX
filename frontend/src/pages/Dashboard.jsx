@@ -31,6 +31,9 @@ export default function Dashboard() {
     return Math.round((wins / matches.length) * 100);
   };
 
+  const getAvatarSrc = (name) =>
+    new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
+
   /* ------------------ socket: match found ------------------ */
   useEffect(() => {
     if (!user) return;
@@ -100,10 +103,12 @@ export default function Dashboard() {
             <div className="card-body gap-6">
               {/* Header */}
               <div className="flex items-center gap-4">
-                <div className="avatar placeholder">
-                  <div className="w-14 h-14 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
-                    {user.avatar}
-                  </div>
+                <div className="avatar placeholder"> 
+                    <img
+                      src={getAvatarSrc(user.avatar || "golem")}
+                      alt={user.avatar}
+                      className="w-14 h-14 rounded-full object-contain"
+                    />
                 </div>
 
                 <h2 className="card-title text-xl text-base-content">

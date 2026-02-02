@@ -36,7 +36,7 @@ const MatchHistory = () => {
   return (
     <>
       <Navbar />
-      
+
       <div className="match-history">
         <div className="matches-container">
           {!user.matchHistory || user.matchHistory.length === 0 ? (
@@ -48,7 +48,7 @@ const MatchHistory = () => {
             </div>
           ) : (
             <div className="matches-list m-10 ml-50 mr-50">
-              {user.matchHistory.map((match, index) => (
+              {[...user.matchHistory].reverse().map((match, index) => (
                 <MatchCard
                   key={index}
                   match={match}

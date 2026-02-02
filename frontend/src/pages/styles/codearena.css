@@ -1,8 +1,10 @@
 .leetcode-clone {
-  min-height: 100vh;
+  height: 100vh;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  min-height: 0;
 }
 
 .header-codeeditor {

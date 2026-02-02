@@ -1,4 +1,8 @@
 const PlayerProgress = ({ players, totalTestCases }) => {
+
+  const getAvatarSrc = (name) =>
+    new URL(`../../assets/avatars/${name}.png`, import.meta.url).href;
+
   const sortedPlayers = [...players].sort((a, b) => {
     const aPercentage = (a.progress / totalTestCases) * 100;
     const bPercentage = (b.progress / totalTestCases) * 100;
@@ -51,9 +55,11 @@ const PlayerProgress = ({ players, totalTestCases }) => {
               </div>
 
               <div className="player-avatar avatar placeholder">
-                <div className="w-8 h-8 rounded-full bg-primary text-primary-content flex items-center justify-center">
-                  {player.name.charAt(0).toUpperCase()}
-                </div>
+                <img
+                  src={getAvatarSrc(player.avatar || "sadcat")}
+                  alt={player.avatar || "sadcat"}
+                  className="w-8 h-8 rounded-full object-contain"
+                />
               </div>
 
               <div className="player-info flex-1 min-w-0">

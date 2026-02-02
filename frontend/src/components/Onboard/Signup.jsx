@@ -4,14 +4,34 @@ import { registerUser } from "../../services/api";
 import { useSystemMessages } from "../../contexts/SystemMessageContext";
 
 const Signup = () => {
-  const [selectedAvatar, setSelectedAvatar] = useState(0);
+  const [selectedAvatar, setSelectedAvatar] = useState("frog");
   const [username, setUsername] = useState("John Doe");
   const [selectedLanguage, setSelectedLanguage] = useState("Python");
   const [email, setEmail] = useState("johndoe@gmail.com");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const avatars = ["😀", "😎", "🤖", "🦄", "🐱", "🐶", "🦊", "🐼"];
+  const avatars = [
+    "coolbanana",
+    "coolcat",
+    "creeper",
+    "danksmile",
+    "dog",
+    "dragon",
+    "fox",
+    "frog",
+    "golem",
+    "mcmonster",
+    "monkey",
+    "owl",
+    "sadcat",
+    "shibudog",
+    "woman",
+  ];
+
+  const getAvatarSrc = (name) =>
+    new URL(`../../assets/avatars/${name}.png`, import.meta.url).href;
+
   const languages = ["JavaScript", "C++", "Python", "Java"];
   const navigate = useNavigate();
   const { addMessage } = useSystemMessages();
@@ -52,26 +72,33 @@ const Signup = () => {
             <div className="space-y-4">
               <div className="flex flex-col items-center">
                 <div className="avatar mb-6">
-                  <div className="avatar">{avatars[selectedAvatar]}</div>
+                  <img
+                    src={getAvatarSrc(selectedAvatar)}
+                    alt={selectedAvatar}
+                    className="w-25 h-25 rounded-full object-contain"
+                  />
                 </div>
-
                 <div className="text-center">
                   <p className="text-sm text-gray-500 mb-2">
-                    Click an emoji to select
+                    Select your Avatar
                   </p>
                   <div className="flex flex-wrap justify-center gap-2">
                     {avatars.map((avatar, index) => (
                       <button
                         key={index}
                         type="button"
-                        className={`w-10 h-10 text-xl rounded-full flex items-center justify-center hover:bg-base-300 transition-colors ${
+                        className={`w-10 h-10 rounded-full flex items-center justify-center hover:bg-base-300 transition-colors ${
                           selectedAvatar === index
-                            ? "bg-primary text-primary-content"
+                            ? "bg-primary ring-2 ring-primary"
                             : "bg-base-100"
                         }`}
-                        onClick={() => setSelectedAvatar(index)}
+                        onClick={() => setSelectedAvatar(avatar)}
                       >
-                        {avatar}
+                        <img
+                          src={getAvatarSrc(avatar)}
+                          alt={avatar}
+                          className="w-8 h-8 rounded-full object-contain"
+                        />
                       </button>
                     ))}
                   </div>

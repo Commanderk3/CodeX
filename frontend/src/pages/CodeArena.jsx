@@ -17,7 +17,7 @@ const CodeArena = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { addMessage } = useSystemMessages();
-  
+
   const {
     username,
     avatar,
@@ -31,7 +31,9 @@ const CodeArena = () => {
 
   const totalTestCases = question.test_cases.length;
   const [language, setLanguage] = useState(lang.toLowerCase() || "javascript");
-  const [currCode, setCurrCode] = useState(question.boilerplate[lang.toLowerCase() || "javascript"]);
+  const [currCode, setCurrCode] = useState(
+    question.boilerplate[lang.toLowerCase() || "javascript"],
+  );
   const [errorMsg, setErrorMsg] = useState("");
   const [result, setResult] = useState(null);
 
@@ -45,6 +47,9 @@ const CodeArena = () => {
   const timeLeft = expiresAt - Date.now();
 
   const languageIdMap = { "c++": 105, python: 71, javascript: 63, java: 62 };
+
+  const getAvatarSrc = (name) =>
+    new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
 
   useEffect(() => {
     if (socket.disconnected) {
@@ -91,6 +96,7 @@ const CodeArena = () => {
         state: {
           username,
           opponent: opponent.playerName,
+          oppAvatar: opponent.avatar || "sadcat",
           currRating,
           language,
           mappedResult,
@@ -129,9 +135,11 @@ const CodeArena = () => {
         <div className="meter-top">
           <div className="you-container">
             <div className="avatar">
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
-                {avatar || "👤"}
-              </div>
+              <img
+                src={getAvatarSrc(avatar)}
+                alt={avatar}
+                className="w-12 h-12 rounded-full object-contain"
+              />
             </div>
             <h1 className="text-4xl font-bold text-base-content">{username}</h1>
             <TestCaseYou casepassed={playerStats} totalCases={totalTestCases} />
@@ -150,9 +158,11 @@ const CodeArena = () => {
             </h1>
 
             <div className="avatar">
-              <div className="w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
-                {opponent?.avatar || "👤"}
-              </div>
+              <img
+                src={getAvatarSrc(opponent.avatar || "sadcat")}
+                alt={opponent.avatar || "sadcat"}
+                className="w-12 h-12 rounded-full object-contain"
+              />
             </div>
           </div>
         </div>

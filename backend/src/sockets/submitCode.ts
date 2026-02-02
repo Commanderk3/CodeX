@@ -1,7 +1,10 @@
-import { Socket } from "socket.io";
 import { Server } from "socket.io";
 
-import { submitBatch, getBatchSubmission } from "../services/codeRunner.service";
+import {
+  submitBatch,
+  getBatchSubmission,
+} from "../services/codeRunner.service";
+
 import { checkTestCases } from "../services/checkTestCases";
 import { generateSubmissions } from "../services/generateSubmissions";
 import questions from "../../question2.json";
@@ -16,14 +19,41 @@ import { Judge0BatchResponse, Judge0BatchResult } from "../types/jude0";
 import { CodeResult } from "../types/jude0";
 import { CustomSocket } from "../types/global";
 
+import { canSubmitCode } from "../utils/rateLimiter";
+
 export const submitCode = (socket: CustomSocket, io: Server) => {
   socket.on("submit-code", async (data: SubmitCodePayload) => {
     try {
+      if (socket.user === undefined) return;
+      const userId = socket.user.id;
+
+      const rate = canSubmitCode(userId);
+      if (!rate.allowed) {
+        socket.emit("systemMessage", {
+          type: "error",
+          message: `Too many submissions. Try again in ${rate.retryAfter}s.`,
+        });
+        return;
+      }
+
+      console.log("**");
+
       const { language_id, source_code, roomId, playerName } = data;
+
+      if (!source_code?.trim()) {
+        socket.emit("systemMessage", {
+          type: "error",
+          message: "Code cannot be empty",
+        });
+        return;
+      }
 
       const room = findRoomById(roomId);
       if (!room) {
-        socket.emit("systemMessage", { type: "error", message: "Room not found" });
+        socket.emit("systemMessage", {
+          type: "error",
+          message: "Room not found",
+        });
         return;
       }
 
@@ -54,21 +84,20 @@ export const submitCode = (socket: CustomSocket, io: Server) => {
         language_id,
         source_code,
         templateCode,
-        inputTests
+        inputTests,
       );
 
       const tokenData: Judge0BatchResponse = await submitBatch(submissions);
       const result: Judge0BatchResult = await getBatchSubmission(tokenData);
-      const codeResult: CodeResult = checkTestCases(result.submissions, inputTests);
+      const codeResult: CodeResult = checkTestCases(
+        result.submissions,
+        inputTests,
+      );
       if (codeResult === undefined) return;
       console.log("codeResult", codeResult);
 
       const testCasePassed = codeResult.mismatchedAt;
       if (testCasePassed === null) return;
-
-      if (socket.user === undefined) return;
-
-      const userId = socket.user.id;
 
       if (room.type === "classic") {
         updateTestCase(
@@ -76,7 +105,7 @@ export const submitCode = (socket: CustomSocket, io: Server) => {
           userId,
           testCasePassed,
           codeResult.resultStatus,
-          io
+          io,
         );
       } else {
         updateTestCaseInRoom(roomId, userId, testCasePassed);
@@ -88,7 +117,6 @@ export const submitCode = (socket: CustomSocket, io: Server) => {
         playerName,
         mismatchedAt: testCasePassed,
       });
-
     } catch (err) {
       console.error(err);
       socket.emit("error", {

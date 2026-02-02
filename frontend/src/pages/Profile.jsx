@@ -4,37 +4,86 @@ import { updateProfile } from "../services/api";
 import { useUser } from "../contexts/UserContext";
 import { useSystemMessages } from "../contexts/SystemMessageContext";
 
-const avatars = ["😀", "😎", "🤖", "🦄", "🐱", "🐶", "🦊", "🐼"];
+const avatars = [
+  "coolbanana",
+  "coolcat",
+  "creeper",
+  "danksmile",
+  "dog",
+  "dragon",
+  "fox",
+  "frog",
+  "golem",
+  "mcmonster",
+  "monkey",
+  "owl",
+  "sadcat",
+  "shibudog",
+  "woman",
+];
+
+const getAvatarSrc = (name) =>
+  new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
+
 const languages = ["JavaScript", "C++", "Python", "Java"];
 
 export default function Profile() {
   const { user, setUser, loading } = useUser();
-  if (!user) return;
-  const [username, setUsername] = useState(user.username);
-  const [avatar, setAvatar] = useState(user.avatar);
-  const [language, setLanguage] = useState(user.language);
-  const { addMessage } = useSystemMessages(); 
+  const { addMessage } = useSystemMessages();
+
+  const [username, setUsername] = useState("");
+  const [avatar, setAvatar] = useState("");
+  const [language, setLanguage] = useState("");
+
+  useEffect(() => {
+    if (user) {
+      setUsername(user.username);
+      setAvatar(user.avatar);
+      setLanguage(user.language);
+    }
+  }, [user]);
+
+  if (loading) {
+    return (
+      <>
+        <Navbar />
+        <div className="dashboard-container">
+          <div className="loading-state">Loading...</div>
+        </div>
+      </>
+    );
+  }
+
+  if (!user) {
+    return null;
+  }
 
   const enableSave =
     user.username !== username ||
     user.avatar !== avatar ||
     user.language !== language;
 
-  const handleSave = async() => {
+  const reset = () => {
+    setUsername(user.username);
+    setAvatar(user.avatar);
+    setLanguage(user.language);
+  }
+
+  const handleSave = async () => {
     if (username.length === 0 || avatar === "" || language === "") {
-        addMessage("error", "Username field is empty");
-    } 
+      addMessage("error", "Username field is empty");
+    }
     console.log({ username, avatar, language });
     const data = { username, avatar, language };
 
     try {
-        const token = localStorage.getItem("token");
-        const res = await updateProfile(data, token);
-        console.log(res);
-        setUser(res.data);
+      const token = localStorage.getItem("token");
+      const res = await updateProfile(data, token);
+      console.log(res);
+      setUser(res.data);
     } catch (err) {
-        addMessage("error", err.response.data.message);
-        console.error(err);
+      addMessage("error", err.response.data.message);
+      console.error(err);
     }
   };
 
@@ -53,9 +102,16 @@ export default function Profile() {
     <>
       <Navbar />
       <div className="m-5 space-y-6 max-w-xl mx-auto">
-        <p className="text-sm text-base-content/70">
-          Update your personal information
-        </p>
+
+
+        <div className="avatar mb-6 flex justify-center flex-col items-center gap-2">
+          <img
+            src={getAvatarSrc(avatar)}
+            alt={avatar}
+            className="w-28 h-28 rounded-full object-contain"
+          />
+          <h1>{username}</h1>
+        </div>
 
         {/* Profile Card */}
         <div className="card bg-base-200 border border-base-300 shadow-sm">
@@ -64,18 +120,22 @@ export default function Profile() {
             <div>
               <h3 className="font-semibold mb-2">New avatar</h3>
               <div className="flex gap-3 flex-wrap">
-                {avatars.map((a) => (
+                {avatars.map((avatarName, index) => (
                   <button
-                    key={a}
-                    className={`w-12 h-12 rounded-full text-2xl flex items-center justify-center
-                    ${
-                      avatar === a
-                        ? "bg-primary text-primary-content"
-                        : "bg-base-300 hover:bg-base-100"
+                    key={index}
+                    type="button"
+                    className={`w-11 h-11 rounded-full flex items-center justify-center hover:bg-base-300 transition-colors ${
+                      avatar === avatarName
+                        ? "bg-primary ring-1 ring-primary"
+                        : "bg-base-100"
                     }`}
-                    onClick={() => setAvatar(a)}
+                    onClick={() => setAvatar(avatarName)}
                   >
-                    {a}
+                    <img
+                      src={getAvatarSrc(avatarName)}
+                      alt={avatarName}
+                      className="w-10 h-10 rounded-full object-contain"
+                    />
                   </button>
                 ))}
               </div>
@@ -111,8 +171,12 @@ export default function Profile() {
 
             {/* Actions */}
             <div className="flex justify-end gap-3">
-              <button className="btn btn-ghost">Cancel</button>
-              <button className="btn btn-primary" disabled={!enableSave} onClick={handleSave}>
+              <button className="btn btn-ghost" onClick={reset}>Cancel</button>
+              <button
+                className="btn btn-primary"
+                disabled={!enableSave}
+                onClick={handleSave}
+              >
                 Save Changes
               </button>
             </div>

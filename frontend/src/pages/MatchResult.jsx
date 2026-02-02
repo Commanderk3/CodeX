@@ -29,11 +29,15 @@ export default function MatchResult() {
   const {
     username,
     opponent,
+    oppAvatar,
     currRating,
     mappedResult,
     totalTestCases,
     createdAt,
   } = location.state || {};
+
+  const getAvatarSrc = (name) =>
+    new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
 
   useEffect(() => {
     if (!location.state) {
@@ -83,6 +87,7 @@ export default function MatchResult() {
     location.state,
     username,
     opponent,
+    oppAvatar,
     currRating,
     mappedResult,
     totalTestCases,
@@ -175,9 +180,11 @@ export default function MatchResult() {
               <div className="flex items-center justify-between">
                 <div className="text-center">
                   <div className="avatar placeholder">
-                    <div className="bg-primary text-primary-content rounded-full w-12 h-12">
-                      <span>👤</span>
-                    </div>
+                    <img
+                      src={getAvatarSrc(user.avatar)}
+                      alt={user.avatar}
+                      className="w-14 h-14 rounded-full object-contain"
+                    />
                   </div>
                   <div className="mt-2 font-medium">{username}</div>
                   <div className="text-sm text-gray-500">{userStats.time}m</div>
@@ -189,9 +196,11 @@ export default function MatchResult() {
 
                 <div className="text-center">
                   <div className="avatar placeholder">
-                    <div className="bg-secondary text-secondary-content rounded-full w-12 h-12">
-                      <span>🤖</span>
-                    </div>
+                    <img
+                      src={getAvatarSrc(oppAvatar || "woman")}
+                      alt={oppAvatar}
+                      className="w-14 h-14 rounded-full object-contain"
+                    />
                   </div>
                   <div className="mt-2 font-medium">{opponentStats.name}</div>
                   <div className="text-sm text-gray-500">
@@ -256,7 +265,7 @@ export default function MatchResult() {
               onClick={handleFindMatch}
               className="btn btn-primary flex-1"
             >
-              {isFindingMatch? "Cancel" : "Find Match"}
+              {isFindingMatch ? "Cancel" : "Find Match"}
             </button>
           </div>
           {isFindingMatch && (

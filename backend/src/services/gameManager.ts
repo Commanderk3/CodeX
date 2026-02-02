@@ -19,7 +19,7 @@ import {
 } from "../repositories/result.repository";
 import updateLeaderboard from "../repositories/rating.repository";
 
-const MATCH_DURATION = 20 * 1000;
+const MATCH_DURATION = 5 * 60 * 1000;
 
 function createClassicGame(player1, player2, io) {
   const roomId = generateRoomCode();

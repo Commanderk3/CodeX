@@ -11,10 +11,10 @@ const CodeEditor = ({
   handleSubmit,
   runTests,
 }) => {
-  const { isDark, setIsDark } = useTheme();
+  const { isDark } = useTheme();
   return (
     <div className="code-editor-container">
-      <div className="editor-toolbar flex justify-between items-center gap-4">
+      <div className="editor-toolbar flex flex-wrap justify-between items-center gap-2">
         {/* Language Dropdown */}
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-outline btn-sm">

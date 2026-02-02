@@ -6,6 +6,9 @@ export default function Leaderboard() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
+  const getAvatarSrc = (name) =>
+    new URL(`../assets/avatars/${name}.png`, import.meta.url).href;
+
   const fetchLeaderboard = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -104,11 +107,11 @@ export default function Leaderboard() {
                       {/* Avatar + Name */}
                       <div className="flex items-center gap-3">
                         <div className="avatar placeholder">
-                          <div className="w-10 h-10 rounded-full bg-primary text-primary-content flex items-center justify-center text-lg">
-                            {player.avatar ||
-                              player.username?.charAt(0).toUpperCase() ||
-                              "?"}
-                          </div>
+                          <img
+                            src={getAvatarSrc(player.avatar || "sadcat")}
+                            alt={player.avatar || "sadcat"}
+                            className="w-10 h-10 rounded-full object-contain"
+                          />
                         </div>
 
                         <div className="font-semibold text-base-content">

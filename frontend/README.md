@@ -48,3 +48,11 @@ matchHistory needs to be reversed. Also fix ndant live status matches
 
 - show live animation in match history tab if a match is ongoing
 - dont forget to send less test cases to client. Ig we have to add a total test case field.
+
+- rematch feature 
+
+- front end optimizations
+
+- navigation fix
+
+- isLive fix in Match list

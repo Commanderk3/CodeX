@@ -8,8 +8,9 @@
 }
 
 .main-splitter {
-  height: 100% !important;
-  width: 100% !important;
+  flex: 1;
+  min-width: 0;
+  min-height: 0;
 }
 
 .p-splitter-panel {
@@ -41,7 +42,7 @@
 }
 
 .players-count {
-  background-color: rgba(255,255,255,0.2);
+  background-color: rgba(255, 255, 255, 0.2);
   padding: 2px 8px;
   border-radius: 12px;
   font-size: 0.8rem;
@@ -52,8 +53,9 @@
 .editor-testcase-container,
 .code-editor-container,
 .testcase-container {
-  
-  height: 100% !important;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* Fix for primereact splitter */
