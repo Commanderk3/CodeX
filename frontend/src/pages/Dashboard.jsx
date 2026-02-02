@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useFindMatch } from "../hooks/findMatch";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { useGame } from "../contexts/GameContext";
@@ -7,8 +8,8 @@ import Navbar from "../components/Navbar";
 import CreateRoom from "../components/CreateRoom/CreateRoom";
 import RoomList from "../components/RoomList";
 import "./styles/dashboard.css";
-import TestButton from "../components/TestButton";
 import socket from "../socket";
+import Leaderboard from "../components/Leaderboard";
 
 export default function Dashboard() {
   const { user, loading } = useUser();
@@ -16,11 +17,17 @@ export default function Dashboard() {
   const [winRate, setWinRate] = useState(0);
   const [showCreateRoom, setShowCreateRoom] = useState(false);
 
+  const { findMatch } = useFindMatch({
+    user,
+    isFindingMatch,
+    setIsFindingMatch,
+  });
+
   const navigate = useNavigate();
 
   const calculateWinRate = (matches) => {
     if (!matches || matches.length === 0) return 0;
-    const wins = matches.filter(m => m.result === "victory").length;
+    const wins = matches.filter((m) => m.result === "victory").length;
     return Math.round((wins / matches.length) * 100);
   };
 
@@ -30,13 +37,7 @@ export default function Dashboard() {
 
     setWinRate(calculateWinRate(user.matchHistory));
 
-    const handleMatch = ({
-      roomId,
-      players,
-      question,
-      createdAt,
-      expiresAt,
-    }) => {
+    const handleMatch = ({ roomId, players, question, expiresAt }) => {
       setIsFindingMatch(false);
 
       navigate("/codearena", {
@@ -44,11 +45,10 @@ export default function Dashboard() {
           username: user.username,
           avatar: user.avatar,
           currRating: user.rating,
-          language: user.language,
+          lang: user.language,
           roomId,
           players,
           question,
-          createdAt,
           expiresAt,
         },
       });
@@ -58,30 +58,9 @@ export default function Dashboard() {
     return () => socket.off("matchFound", handleMatch);
   }, [user, navigate, setIsFindingMatch]);
 
-  /* ------------------ Find Match ------------------ */
-  const findMatch = () => {
-    if (!user) return;
-
-    if (isFindingMatch) {
-      setIsFindingMatch(false);
-      socket.emit("cancel-match", { playerName: user.username });
-      return;
-    }
-
-    setIsFindingMatch(true);
-
-    if (!socket.connected) socket.connect();
-
-    socket.emit("find-match", {
-      playerName: user.username,
-      avatar: user.avatar,
-      rating: user.rating,
-    });
-  };
-
   /* ------------------ Create Room ------------------ */
   const toggleCreateRoom = () => {
-    setShowCreateRoom(prev => !prev);
+    setShowCreateRoom((prev) => !prev);
   };
 
   /* ------------------ Guards ------------------ */
@@ -108,69 +87,101 @@ export default function Dashboard() {
         <CreateRoom
           showCreateRoom={showCreateRoom}
           setShowCreateRoom={setShowCreateRoom}
-          /* CreateRoom will navigate to /lobby itself */
         />
       )}
 
       <Navbar />
 
-      <div className="dashboard-container">
+      {/* Updated container with better light mode background */}
+      <div className="dashboard-container bg-base-100">
         <div className="dashboard-content">
+          {/* User Profile - Added border for better separation */}
+          <section className="card bg-base-100 shadow-md border border-base-300">
+            <div className="card-body gap-6">
+              {/* Header */}
+              <div className="flex items-center gap-4">
+                <div className="avatar placeholder">
+                  <div className="w-14 h-14 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
+                    {user.avatar}
+                  </div>
+                </div>
 
-          {/* User Profile */}
-          <section className="section user-profile">
-            <div className="profile-header">
-              <div className="avatar">{user.avatar}</div>
-              <div className="user-info">
-                <div className="user-name">{user.username}</div>
+                <h2 className="card-title text-xl text-base-content">
+                  {user.username}
+                </h2>
               </div>
-            </div>
 
-            <div className="profile-details">
-              <div className="detail-card">
-                <div className="detail-label">Preferred Language</div>
-                <div className="detail-value">{user.language}</div>
-              </div>
-              <div className="detail-card">
-                <div className="detail-label">Skill Level</div>
-                <div className="detail-value">{user.rating}</div>
-              </div>
-              <div className="detail-card">
-                <div className="detail-label">Matches Played</div>
-                <div className="detail-value">{user.matchHistory.length}</div>
-              </div>
-              <div className="detail-card">
-                <div className="detail-label">Win Rate</div>
-                <div className="detail-value">{winRate}%</div>
+              {/* Stats - Enhanced contrast for stat titles */}
+              <div className="grid grid-cols-1 gap-4">
+                <div className="stat bg-base-200 rounded-box p-3 border border-base-300">
+                  <div className="stat-title text-base-content/70 font-medium">
+                    Language
+                  </div>
+                  <div className="stat-value text-lg text-base-content">
+                    {user.language}
+                  </div>
+                </div>
+
+                <div className="stat bg-base-200 rounded-box p-3 border border-base-300">
+                  <div className="stat-title text-base-content/70 font-medium">
+                    Rating
+                  </div>
+                  <div className="stat-value text-lg text-base-content">
+                    {user.rating}
+                  </div>
+                </div>
+
+                <div className="stat bg-base-200 rounded-box p-3 border border-base-300">
+                  <div className="stat-title text-base-content/70 font-medium">
+                    Matches
+                  </div>
+                  <div className="stat-value text-lg text-base-content">
+                    {user.matchHistory.length}
+                  </div>
+                </div>
+
+                <div className="stat bg-base-200 rounded-box p-3 border border-base-300">
+                  <div className="stat-title text-base-content/70 font-medium">
+                    Win Rate
+                  </div>
+                  <div className="stat-value text-lg text-base-content">
+                    {winRate}%
+                  </div>
+                </div>
               </div>
             </div>
           </section>
 
-          {/* Rooms */}
-          <section className="section available-rooms">
+          {/* Rooms - Added border and better text contrast */}
+          <section className="section card bg-base-100 shadow-md p-5 border border-base-300">
             <RoomList />
           </section>
 
-          {/* Actions */}
-          <section className="section action-buttons">
-            <button className="action-btn find-match" onClick={findMatch}>
+          <section className="section card bg-base-100 shadow-md p-5 border border-base-300">
+            <Leaderboard />
+          </section>
+        </div>
+        {/* Actions - No changes needed here */}
+        <section className="flex gap-10 action-buttons m-5">
+          <section className="flex gap-4">
+            <button className="btn btn-primary" onClick={findMatch}>
               {isFindingMatch ? "Cancel" : "Find Match"}
             </button>
 
-            <button className="action-btn create-room" onClick={toggleCreateRoom}>
+            <button className="btn btn-secondary" onClick={toggleCreateRoom}>
               Create a Room
             </button>
           </section>
-
-          {/* Match Loader */}
+          {/* Match Loader - Improved text contrast */}
           {isFindingMatch && (
-            <section className="section matching-indicator active">
-              <div className="loader"></div>
-              <p>Finding a match for you...</p>
+            <section className="section flex-1">
+              <span className="loading loading-dots loading-md text-primary"></span>
+              <p className="text-base-content mt-2">
+                Finding a match for you...
+              </p>
             </section>
           )}
-
-        </div>
+        </section>
       </div>
     </>
   );

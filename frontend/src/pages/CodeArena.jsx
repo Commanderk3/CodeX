@@ -1,23 +1,22 @@
+import socket from "../socket";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSystemMessages } from "../contexts/SystemMessageContext";
 import { Splitter, SplitterPanel } from "primereact/splitter";
 
 import ProblemPanel from "../components/ProblemPanel/ProblemPanel";
 import CodeEditor from "../components/CodeEditor/CodeEditor";
-import "primereact/resources/themes/lara-light-indigo/theme.css";
-import "primereact/resources/primereact.min.css";
-import "../App.css";
 import TestCaseWindow from "../components/TestCaseWindow/TestCaseWindow";
-import "./styles/codearena.css";
 import Timer from "../components/Timer/Timer";
 import TestCaseYou from "../components/TestCaseMeter/TestCaseYou";
 import TestCaseOpp from "../components/TestCaseMeter/TestCaseOpp";
 
-import socket from "../socket";
+import "./styles/codearena.css";
 
 const CodeArena = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { addMessage } = useSystemMessages();
   
   const {
     username,
@@ -27,21 +26,23 @@ const CodeArena = () => {
     roomId,
     players,
     question,
-    createdAt,
     expiresAt,
   } = location.state;
 
   const totalTestCases = question.test_cases.length;
-  const [language, setLanguage] = useState("javascript");
-  const [currCode, setCurrCode] = useState(question.boilerplate["javascript"]);
+  const [language, setLanguage] = useState(lang.toLowerCase() || "javascript");
+  const [currCode, setCurrCode] = useState(question.boilerplate[lang.toLowerCase() || "javascript"]);
   const [errorMsg, setErrorMsg] = useState("");
   const [result, setResult] = useState(null);
-  const [playerStats, setPlayerStats] = useState(0);
+
   const opponent = players.find((p) => p.playerName !== username);
+  const player = players.find((p) => p.playerName === username);
+  console.log(player, username);
+
+  const [playerStats, setPlayerStats] = useState(player.testCasePassed);
   const [opponentStats, setOpponentStats] = useState(opponent.testCasePassed);
+
   const timeLeft = expiresAt - Date.now();
-  // console.log("Time left:", timeLeft);
-  // console.log("Time left", expiresAt - createdAt);
 
   const languageIdMap = { "c++": 105, python: 71, javascript: 63, java: 62 };
 
@@ -56,9 +57,9 @@ const CodeArena = () => {
     if (!location.state) return;
 
     socket.on("code-result", (data) => {
-      const result = data.codeResult;     // FIX
+      const result = data.codeResult; // FIX
 
-      setResult(result.resultStatus);
+      setResult(result.mismatchedAt);
       console.log("code-result", data);
 
       if (result.errorMsg) {
@@ -70,7 +71,6 @@ const CodeArena = () => {
       const passedCases = result.mismatchedAt || 0;
       setPlayerStats(passedCases);
     });
-
 
     socket.on("opponent-progress", (data) => {
       const passedCases = data.mismatchedAt || 0;
@@ -84,7 +84,7 @@ const CodeArena = () => {
           acc[player.playerName] = player;
           return acc;
         },
-        {}
+        {},
       );
 
       navigate("/matchResult", {
@@ -114,6 +114,7 @@ const CodeArena = () => {
   };
 
   const handleSubmit = () => {
+    addMessage("success", "Code submitted");
     socket.emit("submit-code", {
       language_id: languageIdMap[language],
       source_code: currCode,
@@ -124,15 +125,19 @@ const CodeArena = () => {
 
   return (
     <div className="leetcode-clone">
-      <div className="info-display">
+      <div className="info-display bg-base-100">
         <div className="meter-top">
           <div className="you-container">
-            <div className="avatar">{avatar}</div>
-            <h1>{username}</h1>
+            <div className="avatar">
+              <div className="w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
+                {avatar || "👤"}
+              </div>
+            </div>
+            <h1 className="text-4xl font-bold text-base-content">{username}</h1>
             <TestCaseYou casepassed={playerStats} totalCases={totalTestCases} />
           </div>
 
-          <Timer initialTime={timeLeft} />
+          <Timer initialTime={timeLeft} onTimeEnd={() => handleSubmit()} />
 
           <div className="op-container">
             <TestCaseOpp
@@ -140,16 +145,22 @@ const CodeArena = () => {
               totalCases={totalTestCases}
             />
 
-            <h1>{opponent.playerName}</h1>
+            <h1 className="text-4xl font-bold text-base-content">
+              {opponent?.playerName || "Opponent"}
+            </h1>
 
-            <div className="avatar">{opponent.avatar}</div>
+            <div className="avatar">
+              <div className="w-12 h-12 rounded-full bg-primary text-primary-content flex items-center justify-center text-2xl">
+                {opponent?.avatar || "👤"}
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
       <Splitter className="main-splitter">
         <SplitterPanel
-          className="problem-panel-container"
+          className="problem-panel-container bg-base-100"
           size={40}
           minSize={30}
         >
@@ -157,15 +168,15 @@ const CodeArena = () => {
         </SplitterPanel>
 
         <SplitterPanel
-          className="editor-testcase-container"
+          className="editor-testcase-container bg-base-100"
           size={60}
           minSize={40}
         >
           <Splitter layout="vertical">
             <SplitterPanel
-              className="code-editor-container"
-              size={30}
-              minSize={40}
+              className="code-editor-container bg-base-100"
+              size={70}
+              minSize={50}
             >
               <CodeEditor
                 question={question}
@@ -178,11 +189,15 @@ const CodeArena = () => {
               />
             </SplitterPanel>
             <SplitterPanel
-              className="testcase-container"
-              size={30}
+              className="testcase-container bg-base-100"
+              size={40}
               minSize={20}
             >
-              <TestCaseWindow tests={question.test_cases} result={result} errorMsg={errorMsg} />
+              <TestCaseWindow
+                tests={question.test_cases || []}
+                result={result}
+                errorMsg={errorMsg}
+              />
             </SplitterPanel>
           </Splitter>
         </SplitterPanel>

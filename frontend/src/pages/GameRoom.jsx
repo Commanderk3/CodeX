@@ -58,7 +58,14 @@ const GameRoom = () => {
   };
 
   const handleCodeResult = (data) => {
+    console.log(data);
+    if (data.codeResult.errorMsg) {
+      setErrorMsg(data.codeResult.errorMsg);
+      return;
+    }
     const passedCases = data.codeResult.mismatchedAt || 0;
+    setResult(passedCases);
+    setErrorMsg("");
 
     setInGamePlayers((prev) =>
       prev.map((p) =>
