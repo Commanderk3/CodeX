@@ -1,37 +1,45 @@
-const normalize = (val) => {
-  if (val == null) return "";
-  const str = String(val).trim();
-  try {
-    const parsed = JSON.parse(str);
-    if (typeof parsed === "object") {
-      return JSON.stringify(parsed);
-    }
-    return String(parsed);
-  } catch {
-    return str;
-  }
-};
+import { normalize } from "../utils/normalize";
 
-exports.checkTestCases = (result, testCases) => {
+interface JudgeResult {
+  status_id: number;
+  stdout?: string | null;
+  stderr?: string | null;
+  compile_output?: string | null;
+}
 
-  const codeResult = {
+interface TestCase {
+  output: unknown;
+}
+
+export interface CodeResult {
+  errorMsg: string | null;
+  resultStatus: boolean | null;
+  mismatchedAt: number | null;
+}
+
+export function checkTestCases(
+  result: JudgeResult[],
+  testCases: TestCase[]
+): CodeResult {
+  const codeResult: CodeResult = {
     errorMsg: null,
     resultStatus: null,
     mismatchedAt: null,
-  }
+  };
 
   for (let i = 0; i < testCases.length; i++) {
     const res = result[i];
 
     // Compilation / runtime error
     if (res.status_id >= 4 && res.status_id <= 14) {
-      codeResult.errorMsg = res.stderr || res.compile_output || "";
+      codeResult.errorMsg =
+        res.stderr || res.compile_output || "";
       codeResult.resultStatus = false;
       codeResult.mismatchedAt = i;
       return codeResult;
     }
 
-    const actual = normalize(res.stdout || "");
+    const actual = normalize(res.stdout ?? "");
     const expected = normalize(testCases[i].output);
 
     if (actual !== expected) {
@@ -44,4 +52,4 @@ exports.checkTestCases = (result, testCases) => {
   codeResult.resultStatus = true;
   codeResult.mismatchedAt = testCases.length;
   return codeResult;
-};
+}

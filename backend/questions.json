@@ -1,7 +1,7 @@
 [
   {
     "title": "Palindrome Number",
-    "problem_id": "3",
+    "problem_id": "1",
     "difficulty": "Easy",
     "topics": ["Math"],
     "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
@@ -34,7 +34,7 @@
   },
   {
     "title": "Longest Substring Without Repeating Characters",
-    "problem_id": "4",
+    "problem_id": "2",
     "difficulty": "Medium",
     "topics": ["Hash Table", "String", "Sliding Window"],
     "description": "Given a string s, find the length of the longest substring without repeating characters.",

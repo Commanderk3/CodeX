@@ -1,7 +1,7 @@
 [
   {
     "title": "Palindrome Number",
-    "problem_id": "3",
+    "problem_id": 0,
     "difficulty": "Easy",
     "topics": ["Math"],
     "description": "Given an integer x, return true if x is a palindrome, and false otherwise.",
@@ -41,7 +41,7 @@
   },
   {
     "title": "Longest Substring Without Repeating Characters",
-    "problem_id": "4",
+    "problem_id": 1,
     "difficulty": "Medium",
     "topics": ["Hash Table", "String", "Sliding Window"],
     "description": "Given a string s, find the length of the longest substring without repeating characters.",
@@ -81,7 +81,7 @@
   },
   {
     "title": "Search in Rotated Sorted Array",
-    "problem_id": "8",
+    "problem_id": 2,
     "difficulty": "Medium",
     "topics": ["Array", "Binary Search"],
     "description": "Given an integer array nums sorted in ascending order (with distinct values), and an integer target, return the index of target if it is in nums, or -1 if it is not in nums.",
@@ -125,7 +125,7 @@
   },
   {
     "title": "Remove Nth Node From End of List",
-    "problem_id": "11",
+    "problem_id": 3,
     "difficulty": "Medium",
     "topics": ["Linked List", "Two Pointers"],
     "description": "Given the head of a linked list, remove the nth node from the end of the list and return its head.",
@@ -161,15 +161,15 @@
       "javascript": "function removeNthFromEnd(head, n) {\n}"
     },
     "template": {
-      "python": "class ListNode:\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\nUSER_CODE\n\nhead = list_to_linkedlist(${input_head})\nresult_head = removeNthFromEnd(head, ${input_n})\nresult = linkedlist_to_list(result_head)\nprint(result)",
+      "python": "class ListNode:\r\n    def __init__(self, val=0, next=None):\r\n        self.val = val\r\n        self.next = next\r\n\r\ndef list_to_linkedlist(arr):\r\n    dummy = ListNode()\r\n    curr = dummy\r\n    for v in arr:\r\n        curr.next = ListNode(v)\r\n        curr = curr.next\r\n    return dummy.next\r\n\r\ndef linkedlist_to_list(head):\r\n    result = []\r\n    while head:\r\n        result.append(head.val)\r\n        head = head.next\r\n    return result\r\n\r\nUSER_CODE\r\n\r\nhead = list_to_linkedlist(INPUT1)\r\nresult_head = removeNthFromEnd(head, INPUT2)\r\nresult = linkedlist_to_list(result_head)\r\nprint(result)\r\n",
       "c++": "#include <iostream>\n#include <vector>\n#include <string>\nusing namespace std;\n\nstruct ListNode {\n    int val;\n    ListNode *next;\n    ListNode() : val(0), next(nullptr) {}\n    ListNode(int x) : val(x), next(nullptr) {}\n    ListNode(int x, ListNode *next) : val(x), next(next) {}\n};\n\nUSER_CODE\n\nint main() {\n    ListNode* head = list_to_linkedlist(${input_head});\n    ListNode* result_head = removeNthFromEnd(head, ${input_n});\n    vector<int> result = linkedlist_to_list(result_head);\n}",
       "java": "class ListNode {\n    int val;\n    ListNode next;\n    ListNode() {}\n    ListNode(int val) { this.val = val; }\n    ListNode(int val, ListNode next) { this.val = val; this.next = next; }\n}\n\npublic class Main {\n    USER_CODE\n    \n    public static void main(String[] args) {\n        ListNode head = listToLinkedlist(${input_head});\n        ListNode resultHead = removeNthFromEnd(head, ${input_n});\n        List<Integer> result = linkedlistToList(resultHead);\n        System.out.println(result);\n    }\n}",
-      "javascript": "function ListNode(val, next) {\n    this.val = (val===undefined ? 0 : val);\n    this.next = (next===undefined ? null : next);\n}\n\nUSER_CODE\n\nconst head = listToLinkedlist(${input_head});\nconst resultHead = removeNthFromEnd(head, ${input_n});\nconst result = linkedlistToList(resultHead);\nconsole.log(result);"
+      "javascript": "function ListNode(val, next = null) {\r\n  this.val = val;\r\n  this.next = next;\r\n}\r\n\r\nfunction listToLinkedlist(arr) {\r\n  let dummy = new ListNode(0);\r\n  let curr = dummy;\r\n  for (const v of arr) {\r\n    curr.next = new ListNode(v);\r\n    curr = curr.next;\r\n  }\r\n  return dummy.next;\r\n}\r\n\r\nfunction linkedlistToList(head) {\r\n  const res = [];\r\n  while (head) {\r\n    res.push(head.val);\r\n    head = head.next;\r\n  }\r\n  return res;\r\n}\r\n\r\nUSER_CODE\r\n\r\nconst head = listToLinkedlist(INPUT1);\r\nconst resultHead = removeNthFromEnd(head, INPUT2);\r\nconsole.log(linkedlistToList(resultHead));\r\n"
     }
   },
   {
     "title": "Letter Combinations of a Phone Number",
-    "problem_id": "12",
+    "problem_id": 4,
     "difficulty": "Medium",
     "topics": ["Hash Table", "String", "Backtracking"],
     "description": "Given a string containing digits from 2-9 inclusive, return all possible letter combinations that the number could represent. Return the answer in any order.",
