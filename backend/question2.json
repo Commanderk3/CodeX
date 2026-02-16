@@ -26,6 +26,7 @@
         "output": "False"
       }
     ],
+    "totalTestCases": 3,
     "boilerplate": {
       "python": "def isPalindrome(x):",
       "c++": "bool isPalindrome(int x) {\n}",
@@ -66,6 +67,7 @@
         "output": 3
       }
     ],
+    "totalTestCases": 3,
     "boilerplate": {
       "python": "def lengthOfLongestSubstring(s):",
       "c++": "int lengthOfLongestSubstring(string s) {\n}",
@@ -173,7 +175,7 @@
       }
     ],
 
-    "totalTestCases" : 12,
+    "totalTestCases": 12,
     "boilerplate": {
       "python": "def search(nums, target):",
       "c++": "int search(vector<int>& nums, int target) {\n}",
@@ -217,6 +219,7 @@
         "output": "[1]"
       }
     ],
+    "totalTestCases": 3,
 
     "boilerplate": {
       "python": "def removeNthFromEnd(head, n):",
@@ -258,6 +261,7 @@
         "output": "[\"a\", \"b\", \"c\"]"
       }
     ],
+    "totalTestCases": 3,
     "boilerplate": {
       "python": "def letterCombinations(digits):",
       "c++": "vector<string> letterCombinations(string digits) {\n}",
