@@ -35,7 +35,7 @@ const GameRoom = () => {
   const [result, setResult] = useState(null);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const totalTestCases = question.test_cases.length;
+  const totalTestCases = question.totalTestCases;
   const username = user.username;
 
   const initialPlayerList = players.map((p) => ({
