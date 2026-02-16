@@ -62,8 +62,8 @@ app.get("/activeUsers", (_req: Request, res: Response) => {
 });
 
 // Routes
-app.get("/", (_req: Request, res: Response) => {
-  res.send("Hello player!");
+app.get("/status", (_req: Request, res: Response) => {
+  res.send("Server is healthy!");
 });
 
 io.use(socketAuth);

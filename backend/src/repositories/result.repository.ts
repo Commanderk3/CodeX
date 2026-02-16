@@ -11,17 +11,17 @@ interface PlayerResult {
 
 type MatchResults = Record<string, PlayerResult>;
 
+// FIX ME: add types
 async function addGametoUserProfile(
-  player1,
-  player2,
+  players,
   roomId,
   question,
   startTime,
 ) {
   await Promise.all(
-    [player1, player2].map((p) => {
-      const opponent =
-        String(p.userId) === String(player1.userId) ? player2 : player1;
+    players.map((p) => {
+      const opponent = players.find(op => op.userId !== p.userId);
+
       return User.findByIdAndUpdate(p.userId, {
         $push: {
           matchHistory: {

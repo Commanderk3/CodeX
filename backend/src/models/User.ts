@@ -51,7 +51,7 @@ const userSchema = new mongoose.Schema<UserDocument>(
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    avatar: { type: String, default: "😀" },
+    avatar: { type: String, default: "frog" },
     language: { type: String, default: "JavaScript" },
     rating: { type: Number, default: 0 },
     matchHistory: [

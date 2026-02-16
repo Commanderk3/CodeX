@@ -10,7 +10,8 @@ let waitingQueue: WaitingQueueEntry[] = [];
 const matchMaking = (socket: CustomSocket, io: Server) => {
   socket.on("find-match", async({ playerName, avatar }) => {
     // prevent same user from joining twice
-    if (waitingQueue.some((entry) => entry.playerName === playerName)) {
+    if (socket.user === undefined) return;
+    if (waitingQueue.some((entry) => entry.socket.user?.id === socket.user?.id)) {
       console.log("Duplicate user detected");
       sendMessageToPlayer(io, socket, "error", "Duplicate user detected");
       socket.disconnect(true);

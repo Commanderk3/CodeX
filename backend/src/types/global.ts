@@ -73,7 +73,7 @@ export interface NewPlayer {
 export type ActiveRoom = ClassicGame | CustomRoom;
 
 interface WaitingQueueEntry {
-  socket: Socket;
+  socket: CustomSocket;
   playerName: string;
   avatar: string;
   rating: number;

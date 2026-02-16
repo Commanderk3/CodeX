@@ -1,7 +1,12 @@
 import questions from "../../question2.json";
 import { matchResults } from "./matchResults";
-import { Server, Socket } from "socket.io";
-import { ClassicGame, ClassicPlayer, CustomSocket } from "../types/global";
+import { Server } from "socket.io";
+import {
+  ClassicGame,
+  ClassicPlayer,
+  CustomSocket,
+  WaitingQueueEntry,
+} from "../types/global";
 import { generateRoomCode } from "../utils/roomCode";
 import {
   getActiveRooms,
@@ -21,7 +26,7 @@ import updateLeaderboard from "../repositories/rating.repository";
 
 const MATCH_DURATION = 5 * 60 * 1000;
 
-function createClassicGame(player1, player2, io) {
+function createClassicGame(player1, player2, io: Server) {
   const roomId = generateRoomCode();
   player1.socket.join(roomId);
   player2.socket.join(roomId);
@@ -29,7 +34,11 @@ function createClassicGame(player1, player2, io) {
   const endTime = startTime + MATCH_DURATION;
 
   const questionIndx = 2; //Math.floor(Math.random() * questions.length)
-  const question = questions[questionIndx];
+
+  const question = {
+    ...questions[questionIndx],
+    test_cases: questions[questionIndx].test_cases.slice(0, 3),
+  };
 
   const activeSessions = getActiveSessions();
 
@@ -75,7 +84,7 @@ function createClassicGame(player1, player2, io) {
   getActiveRooms().push(room);
   console.log(`Room created: ${roomId}`);
 
-  addGametoUserProfile(player1, player2, roomId, question, startTime);
+  addGametoUserProfile(room.players, roomId, question, startTime);
 
   io.to(roomId).emit("matchFound", {
     roomId,
